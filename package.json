@@ -3,19 +3,21 @@
   "version": "1.0.0",
   "description": "A modern TypeScript library for text highlighting and serialization",
   "type": "module",
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./lib/index.js",
+  "module": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "import": "./lib/index.js",
+      "types": "./lib/index.d.ts"
     }
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "build": "tsc -p tsconfig.lib.json && vite build --config vite.lib.config.ts",
+    "build:demo": "vite build",
+    "preview": "vite preview",
+    "preview:demo": "vite preview"
   },
   "keywords": [
     "highlight",
