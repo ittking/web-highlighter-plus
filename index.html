@@ -282,9 +282,27 @@
       <span class="section-badge">Range → Source</span>
     </div>
     <p class="section-desc">
-      将浏览器选中的 Range 对象转换为可 JSON 序列化的 Source 数据结构。<code>fromRange()</code> 从 Range 对象序列化，<code>fromSelection()</code> 从当前选区序列化。
+      将浏览器选中的 Range 对象转换为可 JSON 序列化的 Source 数据结构。
     </p>
-    <div class="demo-area">
+    <table class="api-table">
+      <thead>
+        <tr>
+          <th>方法</th>
+          <th>区别</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>fromRange(range)</code></td>
+          <td>需要手动传入 Range 对象，不会自动清除选区</td>
+        </tr>
+        <tr>
+          <td><code>fromSelection()</code></td>
+          <td>自动从 <code>window.getSelection()</code> 获取并清除选区</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="demo-area" style="margin-top: 16px;">
       <div class="demo-content" id="f1-content">
         <p>这是第一段文字，包含<strong>加粗文本</strong>和<em>斜体文本</em>。你可以尝试选择跨标签的文本。</p>
         <p>第二段文字，用于测试跨标签选区。选择下面这段话中的一部分。</p>
