@@ -1,19 +1,13 @@
 import { defineConfig } from 'vite';
+import { resolve } from 'path';
 
 export default defineConfig({
+  base: './',
   build: {
-    lib: {
-      entry: './src/index.ts',
-      name: 'WebHighlighterPlus',
-      fileName: 'index',
-      formats: ['es'],
-    },
-    rollupOptions: {
-      external: [],
-      output: {
-        globals: {},
-      },
-    },
+    outDir: 'dist',
+    assetsDir: 'assets',
+    sourcemap: false,
+    minify: 'esbuild',
   },
   server: {
     port: 3000,
