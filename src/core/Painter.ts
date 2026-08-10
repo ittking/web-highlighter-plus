@@ -211,7 +211,7 @@ export class Painter {
    */
   removeAllHighlights(): void {
     const wrappers = this.$root.querySelectorAll(
-      `[${DATASET_IDENTIFIER}]`
+      `[${ATTR_IDENTIFIER}]`
     ) as NodeListOf<HTMLElement>;
 
     wrappers.forEach(($wrapper) => {

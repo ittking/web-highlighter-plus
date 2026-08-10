@@ -1,7 +1,7 @@
 var O = Object.defineProperty;
 var b = (o, t, e) => t in o ? O(o, t, { enumerable: !0, configurable: !0, writable: !0, value: e }) : o[t] = e;
 var a = (o, t, e) => b(o, typeof t != "symbol" ? t + "" : t, e);
-const D = "highlightId", f = "data-highlight-id", g = "data-highlight-id-extra", $ = "data-highlight-split-type", L = -2, P = -1, I = "span", v = "highlight-wrap", p = ";";
+const f = "data-highlight-id", g = "data-highlight-id-extra", $ = "data-highlight-split-type", H = -2, L = -1, D = "span", v = "highlight-wrap", p = ";";
 class y {
   /**
    * Get text total length in all predecessors (text nodes) in the root node
@@ -129,10 +129,10 @@ class y {
     const n = e.$node, i = r.$node, l = e.offset, c = r.offset;
     if (n === i && n instanceof Text)
       return this.getNodesIfSameStartEnd(n, l, c, s || void 0);
-    const u = [t], N = [], S = (x) => !s || s.length === 0 ? !1 : s.some((h) => h.startsWith(".") ? x.classList.contains(h.substring(1)) : h.startsWith("#") ? x.id === h.substring(1) : x.tagName === h.toUpperCase());
-    let A = !1, d;
+    const u = [t], N = [], E = (x) => !s || s.length === 0 ? !1 : s.some((h) => h.startsWith(".") ? x.classList.contains(h.substring(1)) : h.startsWith("#") ? x.id === h.substring(1) : x.tagName === h.toUpperCase());
+    let w = !1, d;
     for (; (d = u.pop()) !== void 0; ) {
-      if (d.nodeType === Node.ELEMENT_NODE && S(d))
+      if (d.nodeType === Node.ELEMENT_NODE && E(d))
         continue;
       const x = d.childNodes;
       for (let h = x.length - 1; h >= 0; h--)
@@ -147,7 +147,7 @@ class y {
             splitType: "head"
           });
         }
-        A = !0;
+        w = !0;
       } else if (d === i) {
         if (d.nodeType === Node.TEXT_NODE) {
           const h = d;
@@ -158,7 +158,7 @@ class y {
           });
         }
         break;
-      } else A && d.nodeType === Node.TEXT_NODE && N.push({
+      } else w && d.nodeType === Node.TEXT_NODE && N.push({
         $node: d,
         type: "text",
         splitType: "none"
@@ -179,7 +179,7 @@ class y {
     };
   }
 }
-function _(o) {
+function I(o) {
   return o instanceof HTMLElement ? o.hasAttribute(f) : !1;
 }
 function M(o, t, e) {
@@ -199,15 +199,15 @@ function m(o, t, e) {
     (l.getAttribute(g) || "").split(p).includes(t) && r.push(l);
   return r;
 }
-function R(o, t) {
+function _(o, t) {
   const e = Array.isArray(t) ? t : t.split(/\s+/);
   o.classList.add(...e);
 }
-function C(o, t) {
+function R(o, t) {
   const e = Array.isArray(t) ? t : t.split(/\s+/);
   o.classList.remove(...e);
 }
-function E(o, t) {
+function A(o, t) {
   var s;
   const e = t ? "nextSibling" : "previousSibling";
   let r = o[e];
@@ -220,7 +220,7 @@ function E(o, t) {
     r = n;
   }
 }
-class X {
+class C {
   constructor(t, e, r, s = null) {
     a(this, "$root");
     a(this, "wrapTag");
@@ -277,7 +277,7 @@ class X {
     const { $node: r, splitType: s } = t;
     if (!(r instanceof Text)) return null;
     const n = r, i = n.parentElement;
-    return i ? _(i) ? this.wrapOverlapNode(i, n, s, e) : this.wrapNewNode(n, s, e) : null;
+    return i ? I(i) ? this.wrapOverlapNode(i, n, s, e) : this.wrapNewNode(n, s, e) : null;
   }
   /**
    * Wrap a new (unwrapped) text node
@@ -320,7 +320,7 @@ class X {
    */
   removeAllHighlights() {
     this.$root.querySelectorAll(
-      `[${D}]`
+      `[${f}]`
     ).forEach((e) => {
       this.unwrapWrapper(e);
     });
@@ -334,7 +334,7 @@ class X {
     if (e) {
       for (; t.firstChild; )
         e.insertBefore(t.firstChild, t);
-      e.removeChild(t), ((r = t.previousSibling) == null ? void 0 : r.nodeType) === Node.TEXT_NODE && E(t.previousSibling, !0), ((s = t.nextSibling) == null ? void 0 : s.nodeType) === Node.TEXT_NODE && E(t.nextSibling, !1);
+      e.removeChild(t), ((r = t.previousSibling) == null ? void 0 : r.nodeType) === Node.TEXT_NODE && A(t.previousSibling, !0), ((s = t.nextSibling) == null ? void 0 : s.nodeType) === Node.TEXT_NODE && A(t.nextSibling, !1);
     }
   }
   /**
@@ -343,7 +343,7 @@ class X {
   addClassToHighlight(t, e) {
     const r = m(this.$root, t, this.wrapTag);
     for (const s of r)
-      R(s, e);
+      _(s, e);
   }
   /**
    * Remove class from highlight wrapper(s)
@@ -351,7 +351,7 @@ class X {
   removeClassFromHighlight(t, e) {
     const r = m(this.$root, t, this.wrapTag);
     for (const s of r)
-      C(s, e);
+      R(s, e);
   }
   /**
    * Get all wrapper elements
@@ -383,7 +383,7 @@ class X {
     return "";
   }
 }
-function B() {
+function X() {
   return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (o) => {
     const t = Math.random() * 16 | 0;
     return (o === "x" ? t : t & 3 | 8).toString(16);
@@ -405,7 +405,7 @@ class T {
     const r = t.startContainer, s = t.endContainer;
     if (r.nodeType !== Node.TEXT_NODE || s.nodeType !== Node.TEXT_NODE)
       return console.warn("web-highlighter-plus: Only text nodes can be highlighted"), null;
-    const n = e || B(), i = t.toString();
+    const n = e || X(), i = t.toString();
     return new T(
       { $node: r, offset: t.startOffset },
       { $node: s, offset: t.endOffset },
@@ -436,7 +436,7 @@ class T {
     t && t.removeAllRanges();
   }
 }
-class w {
+class S {
   constructor(t, e, r, s, n) {
     a(this, "id");
     a(this, "text");
@@ -449,7 +449,7 @@ class w {
    * Create from plain object (e.g., from JSON.parse)
    */
   static from(t) {
-    return new w(
+    return new S(
       t.id || "",
       t.text || "",
       t.startMeta || { parentTagName: "", parentIndex: -1, textOffset: 0 },
@@ -476,7 +476,7 @@ class w {
     return JSON.stringify(this.toObject());
   }
 }
-class W {
+class P {
   constructor(t = {}) {
     a(this, "$root");
     a(this, "wrapTag");
@@ -485,7 +485,7 @@ class W {
     a(this, "verbose");
     a(this, "painter");
     a(this, "_sources", /* @__PURE__ */ new Map());
-    this.$root = t.root || document.body, this.wrapTag = t.wrapTag || I, this.className = t.className || v, this.exceptSelectors = t.exceptSelectors ?? null, this.verbose = t.verbose ?? !1, this.painter = new X(
+    this.$root = t.root || document.body, this.wrapTag = t.wrapTag || D, this.className = t.className || v, this.exceptSelectors = t.exceptSelectors ?? null, this.verbose = t.verbose ?? !1, this.painter = new C(
       this.$root,
       this.wrapTag,
       this.className,
@@ -624,12 +624,12 @@ export {
   g as ATTR_IDENTIFIER_EXTRA,
   $ as ATTR_SPLIT_TYPE,
   v as DEFAULT_CLASS_NAME,
-  I as DEFAULT_WRAP_TAG,
+  D as DEFAULT_WRAP_TAG,
   T as HighlightRange,
-  w as HighlightSource,
-  W as HighlighterPlus,
+  S as HighlightSource,
+  P as HighlighterPlus,
   p as ID_DIVISION,
-  L as ROOT_IDX,
-  P as UNKNOWN_IDX,
-  B as createUUID
+  H as ROOT_IDX,
+  L as UNKNOWN_IDX,
+  X as createUUID
 };
