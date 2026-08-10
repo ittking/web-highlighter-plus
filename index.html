@@ -3,226 +3,448 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>web-highlighter-plus Demo</title>
+  <title>web-highlighter-plus | 文档</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --background: 0 0% 100%;
+      --foreground: 240 10% 3.9%;
+      --card: 0 0% 100%;
+      --card-foreground: 240 10% 3.9%;
+      --popover: 0 0% 100%;
+      --popover-foreground: 240 10% 3.9%;
+      --primary: 240 5.9% 10%;
+      --primary-foreground: 0 0% 98%;
+      --secondary: 240 4.8% 95.9%;
+      --secondary-foreground: 240 5.9% 10%;
+      --muted: 240 4.8% 95.9%;
+      --muted-foreground: 240 3.8% 46.1%;
+      --accent: 240 4.8% 95.9%;
+      --accent-foreground: 240 5.9% 10%;
+      --border: 240 5.9% 90%;
+      --input: 240 5.9% 90%;
+      --ring: 240 5.9% 10%;
+      --radius: 0.5rem;
+      --destructive: 0 84.2% 60.2%;
+      --destructive-foreground: 0 0% 98%;
+      --success: 142 76% 36%;
+      --success-foreground: 0 0% 98%;
+    }
+
     * {
       box-sizing: border-box;
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      max-width: 1400px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: hsl(var(--background));
+      color: hsl(var(--foreground));
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1000px;
       margin: 0 auto;
-      padding: 20px;
-      background: #f5f5f5;
-      color: #333;
+      padding: 2rem 1.5rem;
     }
 
-    h1 {
+    /* Header */
+    .header {
       text-align: center;
-      color: #1a1a1a;
-      margin-bottom: 5px;
+      padding: 4rem 0;
+      border-bottom: 1px solid hsl(var(--border));
+      margin-bottom: 3rem;
     }
 
-    .subtitle {
-      text-align: center;
-      color: #666;
-      margin-bottom: 30px;
+    .header h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      margin: 0 0 0.75rem;
+      background: linear-gradient(to bottom, hsl(var(--foreground)), hsl(var(--muted-foreground)));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
-    .section {
-      background: white;
-      border-radius: 8px;
-      padding: 24px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    .header p {
+      font-size: 1.125rem;
+      color: hsl(var(--muted-foreground));
+      margin: 0;
+      max-width: 600px;
+      margin: 0 auto;
     }
 
-    .section-header {
+    .badges {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-top: 1.5rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.375rem 0.75rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      background: hsl(var(--secondary));
+      color: hsl(var(--secondary-foreground));
+      border-radius: 9999px;
+      border: 1px solid hsl(var(--border));
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: hsl(var(--success));
+    }
+
+    /* Navigation */
+    .nav {
+      display: flex;
+      gap: 0.25rem;
+      justify-content: center;
+      margin-bottom: 3rem;
+      padding: 0.75rem;
+      background: hsl(var(--secondary));
+      flex-wrap: wrap;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav a {
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: hsl(var(--muted-foreground));
+      text-decoration: none;
+      border-radius: calc(var(--radius) - 4px);
+      transition: all 0.15s ease;
+    }
+
+    .nav a:hover {
+      color: hsl(var(--foreground));
+      background: hsl(var(--background));
+    }
+
+    .nav a.active {
+      color: hsl(var(--foreground));
+      background: hsl(var(--background));
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    }
+
+    /* Cards */
+    .card {
+      background: hsl(var(--card));
+      border: 1px solid hsl(var(--border));
+      border-radius: var(--radius);
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
+
+    .card-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid hsl(var(--border));
       display: flex;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 8px;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
 
-    .section-title {
+    .card-title-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .card-title {
+      font-size: 1.125rem;
+      font-weight: 600;
       margin: 0;
-      font-size: 18px;
-      color: #1a1a1a;
+      letter-spacing: -0.01em;
     }
 
-    .section-badge {
-      background: #4a90d9;
-      color: white;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-size: 12px;
+    .card-badge {
+      font-size: 0.6875rem;
       font-weight: 500;
+      padding: 0.125rem 0.5rem;
+      background: hsl(var(--primary) / 0.1);
+      color: hsl(var(--primary));
+      border-radius: 9999px;
+      font-family: 'JetBrains Mono', monospace;
     }
 
-    .section-desc {
-      color: #666;
-      font-size: 14px;
-      margin-bottom: 16px;
-      line-height: 1.5;
+    .card-content {
+      padding: 1.5rem;
     }
 
-    .demo-area {
+    .card-description {
+      color: hsl(var(--muted-foreground));
+      font-size: 0.9375rem;
+      margin: 0 0 1.25rem;
+      max-width: 65ch;
+    }
+
+    /* Demo Area */
+    .demo-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 20px;
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .demo-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     .demo-content {
-      background: #f8f9fa;
-      border-radius: 6px;
-      padding: 16px;
+      background: hsl(var(--secondary));
+      border-radius: calc(var(--radius) - 2px);
+      padding: 1.25rem;
+      font-size: 0.9375rem;
       line-height: 1.8;
-      font-size: 15px;
     }
 
     .demo-content p {
-      margin: 0.5em 0;
+      margin: 0 0 0.5em;
+    }
+
+    .demo-content p:last-child {
+      margin-bottom: 0;
     }
 
     .demo-content strong {
-      color: #d63384;
+      color: hsl(var(--primary));
+      font-weight: 500;
     }
 
     .demo-content em {
-      color: #0d6efd;
+      color: hsl(var(--primary));
+      font-style: italic;
     }
 
     .demo-content code {
-      background: #e9ecef;
-      padding: 2px 6px;
-      border-radius: 3px;
-      font-family: Monaco, Menlo, monospace;
-      font-size: 13px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8125rem;
+      background: hsl(var(--background));
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      border: 1px solid hsl(var(--border));
     }
 
     .demo-actions {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 1rem;
     }
 
-    .demo-output {
-      background: #1e1e1e;
-      color: #d4d4d4;
-      border-radius: 6px;
-      padding: 16px;
-      font-family: 'Monaco', 'Menlo', monospace;
-      font-size: 12px;
+    .btn-group {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      border-radius: calc(var(--radius) - 2px);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: inherit;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn-primary {
+      background: hsl(var(--primary));
+      color: hsl(var(--primary-foreground));
+      border-color: hsl(var(--primary));
+    }
+
+    .btn-primary:hover {
+      background: hsl(var(--primary) / 0.9);
+    }
+
+    .btn-secondary {
+      background: hsl(var(--secondary));
+      color: hsl(var(--secondary-foreground));
+      border-color: hsl(var(--border));
+    }
+
+    .btn-secondary:hover {
+      background: hsl(var(--secondary) / 0.8);
+    }
+
+    .btn-danger {
+      background: hsl(var(--destructive));
+      color: hsl(var(--destructive-foreground));
+    }
+
+    .btn-danger:hover {
+      background: hsl(var(--destructive) / 0.9);
+    }
+
+    .btn-success {
+      background: hsl(var(--success));
+      color: hsl(var(--success-foreground));
+    }
+
+    .btn-success:hover {
+      background: hsl(var(--success) / 0.9);
+    }
+
+    .btn-sm {
+      padding: 0.375rem 0.75rem;
+      font-size: 0.8125rem;
+    }
+
+    /* Output */
+    .output {
+      background: hsl(var(--foreground));
+      color: hsl(var(--background));
+      border-radius: calc(var(--radius) - 2px);
+      padding: 1rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      line-height: 1.6;
       min-height: 80px;
-      max-height: 200px;
+      max-height: 180px;
       overflow-y: auto;
       white-space: pre-wrap;
       word-break: break-all;
     }
 
-    .btn-row {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
+    .output-empty {
+      color: hsl(var(--muted-foreground));
+      font-style: italic;
     }
 
-    button {
-      padding: 8px 14px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 13px;
+    /* Current Source */
+    .source-info {
+      background: hsl(var(--accent));
+      border: 1px solid hsl(var(--border));
+      border-radius: calc(var(--radius) - 2px);
+      padding: 0.75rem 1rem;
+      font-size: 0.8125rem;
+      color: hsl(var(--muted-foreground));
+    }
+
+    .source-info code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      background: hsl(var(--background));
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      margin-left: 0.25rem;
+    }
+
+    /* API Table */
+    .api-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+      margin: 1rem 0;
+    }
+
+    .api-table th,
+    .api-table td {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid hsl(var(--border));
+    }
+
+    .api-table th {
       font-weight: 500;
-      transition: all 0.2s;
+      color: hsl(var(--muted-foreground));
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
 
-    button:hover {
-      transform: translateY(-1px);
+    .api-table code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8125rem;
+      background: hsl(var(--secondary));
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      border: 1px solid hsl(var(--border));
     }
 
-    button:active {
-      transform: translateY(0);
+    /* Info */
+    .info {
+      background: hsl(var(--primary) / 0.05);
+      border-left: 3px solid hsl(var(--primary));
+      padding: 0.75rem 1rem;
+      font-size: 0.875rem;
+      color: hsl(var(--muted-foreground));
+      border-radius: 0 calc(var(--radius) - 2px) calc(var(--radius) - 2px) 0;
+      margin-top: 1rem;
     }
 
-    .btn-primary {
-      background: #4a90d9;
-      color: white;
+    .info strong {
+      color: hsl(var(--foreground));
     }
 
-    .btn-primary:hover {
-      background: #357abd;
-    }
-
-    .btn-success {
-      background: #28a745;
-      color: white;
-    }
-
-    .btn-success:hover {
-      background: #218838;
-    }
-
-    .btn-warning {
-      background: #ffc107;
-      color: #212529;
-    }
-
-    .btn-warning:hover {
-      background: #e0a800;
-    }
-
-    .btn-danger {
-      background: #dc3545;
-      color: white;
-    }
-
-    .btn-danger:hover {
-      background: #c82333;
-    }
-
-    .btn-secondary {
-      background: #6c757d;
-      color: white;
-    }
-
-    .btn-secondary:hover {
-      background: #545b62;
-    }
-
-    /* Highlight styles */
-    .highlight-wrap {
-      background: #ffeb3b;
-      border-radius: 2px;
-    }
-
-    .highlight-wrap.active {
-      background: #ffc107;
-    }
-
-    .highlight-wrap.custom {
-      background: #cfe2ff;
-      border-bottom: 2px solid #0d6efd;
-    }
-
+    /* Log Panel */
     .log-panel {
-      margin-top: 20px;
-      background: #fff;
-      border-radius: 8px;
-      padding: 16px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      background: hsl(var(--card));
+      border: 1px solid hsl(var(--border));
+      border-radius: var(--radius);
+      padding: 1rem;
+      margin-top: 2rem;
     }
 
-    .log-panel h3 {
-      margin: 0 0 12px 0;
-      font-size: 14px;
-      color: #666;
+    .log-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
+
+    .log-title {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: hsl(var(--muted-foreground));
+      margin: 0;
+    }
+
+    .log-list {
+      max-height: 150px;
+      overflow-y: auto;
+      font-size: 0.75rem;
+      font-family: 'JetBrains Mono', monospace;
     }
 
     .log-entry {
-      padding: 4px 0;
-      border-bottom: 1px solid #eee;
-      font-size: 12px;
+      padding: 0.375rem 0;
+      border-bottom: 1px solid hsl(var(--border));
+      display: flex;
+      gap: 0.75rem;
     }
 
     .log-entry:last-child {
@@ -230,255 +452,362 @@
     }
 
     .log-time {
-      color: #999;
-      margin-right: 8px;
+      color: hsl(var(--muted-foreground));
+      flex-shrink: 0;
     }
 
-    .info-text {
-      background: #e7f3ff;
-      border-left: 3px solid #4a90d9;
-      padding: 8px 12px;
-      margin-top: 12px;
-      font-size: 13px;
-      color: #333;
+    /* Highlight styles */
+    .highlight-wrap {
+      background: hsl(48 90% 55% / 0.3);
+      border-bottom: 2px solid hsl(48 90% 45%);
+      padding: 0 2px;
+      border-radius: 2px;
     }
 
-    .api-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
-      margin-top: 12px;
+    .highlight-wrap.active {
+      background: hsl(48 90% 55% / 0.5);
     }
 
-    .api-table th,
-    .api-table td {
-      text-align: left;
-      padding: 8px 12px;
-      border-bottom: 1px solid #eee;
+    .highlight-wrap.custom {
+      background: hsl(221 83% 53% / 0.15);
+      border-bottom-color: hsl(221 83% 53%);
     }
 
-    .api-table th {
-      background: #f8f9fa;
+    /* Section Divider */
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, hsl(var(--border)), transparent);
+      margin: 2rem 0;
+    }
+
+    /* Feature Grid */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 1rem;
+      background: hsl(var(--secondary));
+      border-radius: calc(var(--radius) - 2px);
+    }
+
+    .feature-icon {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: hsl(var(--background));
+      border-radius: calc(var(--radius) - 4px);
+      flex-shrink: 0;
+    }
+
+    .feature-icon svg {
+      width: 16px;
+      height: 16px;
+      color: hsl(var(--muted-foreground));
+    }
+
+    .feature-text {
+      font-size: 0.8125rem;
+    }
+
+    .feature-text strong {
+      display: block;
       font-weight: 600;
-      color: #333;
+      margin-bottom: 0.125rem;
     }
 
-    .api-table code {
-      background: #e9ecef;
-      padding: 2px 6px;
-      border-radius: 3px;
-      font-family: Monaco, Menlo, monospace;
+    .feature-text span {
+      color: hsl(var(--muted-foreground));
     }
 
-    .current-source {
-      background: #fff3cd;
-      border: 1px solid #ffc107;
-      border-radius: 4px;
-      padding: 8px 12px;
-      margin-top: 8px;
-      font-size: 12px;
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 2rem 0;
+      margin-top: 3rem;
+      border-top: 1px solid hsl(var(--border));
+      color: hsl(var(--muted-foreground));
+      font-size: 0.875rem;
     }
 
-    .current-source strong {
-      color: #856404;
+    .footer a {
+      color: hsl(var(--foreground));
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
-  <h1>web-highlighter-plus</h1>
-  <p class="subtitle">现代化的高亮文本处理库 - 序列化、渲染、批量回显</p>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <h1>web-highlighter-plus</h1>
+      <p>现代化的高亮文本处理库 — 序列化、跨标签渲染、批量回显</p>
+      <div class="badges">
+        <span class="badge"><span class="badge-dot"></span> TypeScript</span>
+        <span class="badge">零依赖</span>
+        <span class="badge">MIT</span>
+      </div>
+    </header>
 
-  <!-- F1: 序列化 -->
-  <div class="section">
-    <div class="section-header">
-      <h2 class="section-title">F1 序列化</h2>
-      <span class="section-badge">Range → Source</span>
-    </div>
-    <p class="section-desc">
-      将浏览器选中的 Range 对象转换为可 JSON 序列化的 Source 数据结构。
-    </p>
-    <table class="api-table">
-      <thead>
-        <tr>
-          <th>方法</th>
-          <th>区别</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><code>fromRange(range)</code></td>
-          <td>需要手动传入 Range 对象，不会自动清除选区</td>
-        </tr>
-        <tr>
-          <td><code>fromSelection()</code></td>
-          <td>自动从 <code>window.getSelection()</code> 获取并清除选区</td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="demo-area" style="margin-top: 16px;">
-      <div class="demo-content" id="f1-content">
-        <p>这是第一段文字，包含<strong>加粗文本</strong>和<em>斜体文本</em>。你可以尝试选择跨标签的文本。</p>
-        <p>第二段文字，用于测试跨标签选区。选择下面这段话中的一部分。</p>
-      </div>
-      <div class="demo-actions">
-        <div class="btn-row">
-          <button class="btn-primary" onclick="f1Serialize()">fromRange()</button>
-          <button class="btn-primary" onclick="f1SerializeSelection()">fromSelection()</button>
-        </div>
-        <div class="demo-output" id="f1-output">选择上方文本后，点击按钮序列化...</div>
-        <div class="current-source" id="f1-source"></div>
-      </div>
-    </div>
-  </div>
+    <!-- Navigation -->
+    <nav class="nav">
+      <a href="#f1" class="active">F1 序列化</a>
+      <a href="#f2">F2 渲染</a>
+      <a href="#f3">F3 类样式</a>
+      <a href="#f4">F4 批量回显</a>
+      <a href="#f5">F5 清除</a>
+      <a href="#utils">工具方法</a>
+    </nav>
 
-  <!-- F2: 渲染 -->
-  <div class="section">
-    <div class="section-header">
-      <h2 class="section-title">F2 跨标签渲染</h2>
-      <span class="section-badge">Source → DOM</span>
-    </div>
-    <p class="section-desc">
-      将 Source 对象渲染为多个 span 包装元素。支持跨多个 HTML 标签（如 <code>&lt;strong&gt;</code>、<code>&lt;em&gt;</code>）的选区。
-    </p>
-    <div class="demo-area">
-      <div class="demo-content" id="f2-content">
-        <p>第三段文字，包含<strong>加粗</strong>和<em>斜体</em>标签的混合内容。选择这段文字测试跨标签渲染。</p>
-      </div>
-      <div class="demo-actions">
-        <div class="btn-row">
-          <button class="btn-primary" onclick="f2SerializeAndRender()">序列化 + 渲染</button>
+    <!-- F1: 序列化 -->
+    <section id="f1">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title-group">
+            <h2 class="card-title">F1 序列化</h2>
+            <span class="card-badge">Range → Source</span>
+          </div>
         </div>
-        <div class="demo-output" id="f2-output">选择上方文本后，点击按钮...</div>
-        <div class="current-source" id="f2-source"></div>
+        <div class="card-content">
+          <p class="card-description">
+            将浏览器选中的 Range 对象转换为可 JSON 序列化的 Source 数据结构。
+          </p>
+          <table class="api-table">
+            <thead>
+              <tr>
+                <th>方法</th>
+                <th>说明</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>fromRange(range)</code></td>
+                <td>需要手动传入 Range 对象，不会自动清除选区</td>
+              </tr>
+              <tr>
+                <td><code>fromSelection()</code></td>
+                <td>自动从 <code>window.getSelection()</code> 获取并清除选区</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="demo-grid">
+            <div class="demo-content" id="f1-content">
+              <p>这是第一段文字，包含<strong>加粗文本</strong>和<em>斜体文本</em>。你可以尝试选择跨标签的文本。</p>
+              <p>第二段文字，用于测试跨标签选区。选择下面这段话中的一部分。</p>
+            </div>
+            <div class="demo-actions">
+              <div class="btn-group">
+                <button class="btn btn-primary" onclick="f1Serialize()">fromRange()</button>
+                <button class="btn btn-primary" onclick="f1SerializeSelection()">fromSelection()</button>
+              </div>
+              <div class="output output-empty" id="f1-output">选择上方文本后，点击按钮序列化...</div>
+              <div class="source-info" id="f1-source"></div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="info-text">
-      <strong>提示：</strong> 渲染后会生成多个 span 元素（每个跨标签位置一个），但都使用相同的 <code>data-highlight-id</code>。
-    </div>
-  </div>
+    </section>
 
-  <!-- F3: 类样式控制 -->
-  <div class="section">
-    <div class="section-header">
-      <h2 class="section-title">F3 类样式控制</h2>
-      <span class="section-badge">CSS Class</span>
-    </div>
-    <p class="section-desc">
-      为指定 ID 的高亮添加或移除 CSS 类。支持多元素高亮（跨标签时会产生多个 span），会自动应用到所有匹配的包装元素。
-    </p>
-    <div class="demo-area">
-      <div class="demo-content" id="f3-content">
-        <p>第四段：<a href="#">链接标签</a>也会被正确处理，不会破坏原有的 HTML 结构。</p>
-        <p>第五段包含一个 <code>code 标签</code> 用于测试代码块的排除。</p>
-      </div>
-      <div class="demo-actions">
-        <div class="btn-row">
-          <button class="btn-primary" onclick="f3SerializeAndRender()">序列化 + 渲染</button>
+    <!-- F2: 渲染 -->
+    <section id="f2">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title-group">
+            <h2 class="card-title">F2 跨标签渲染</h2>
+            <span class="card-badge">Source → DOM</span>
+          </div>
         </div>
-        <div class="btn-row">
-          <button class="btn-warning" onclick="f3AddClass()">addClass('custom')</button>
-          <button class="btn-secondary" onclick="f3RemoveClass()">removeClass('custom')</button>
+        <div class="card-content">
+          <p class="card-description">
+            将 Source 对象渲染为多个 span 包装元素。支持跨多个 HTML 标签的选区。
+          </p>
+          <div class="demo-grid">
+            <div class="demo-content" id="f2-content">
+              <p>第三段文字，包含<strong>加粗</strong>和<em>斜体</em>标签的混合内容。选择这段文字测试跨标签渲染。</p>
+            </div>
+            <div class="demo-actions">
+              <div class="btn-group">
+                <button class="btn btn-primary" onclick="f2SerializeAndRender()">序列化 + 渲染</button>
+              </div>
+              <div class="output output-empty" id="f2-output">选择上方文本后，点击按钮...</div>
+              <div class="source-info" id="f2-source"></div>
+            </div>
+          </div>
+          <div class="info">
+            <strong>提示：</strong> 渲染后会生成多个 span 元素（每个跨标签位置一个），但都使用相同的 <code>data-highlight-id</code>。
+          </div>
         </div>
-        <div class="demo-output" id="f3-output">先序列化渲染，再添加类...</div>
-        <div class="current-source" id="f3-source"></div>
       </div>
-    </div>
-  </div>
+    </section>
 
-  <!-- F4: 批量回显 -->
-  <div class="section">
-    <div class="section-header">
-      <h2 class="section-title">F4 批量回显</h2>
-      <span class="section-badge">Restore</span>
-    </div>
-    <p class="section-desc">
-      使用 <code>fromStore()</code> 创建 Source，<code>restore()</code> 批量渲染。
-    </p>
-    <div class="demo-area">
-      <div class="demo-content" id="f4-content">
-        <p>第六段文字，用于测试批量回显功能。选择部分文本后可以存储起来。</p>
-        <p>第七段：<strong>加粗文本</strong>和<em>斜体文本</em>混合。</p>
-      </div>
-      <div class="demo-actions">
-        <div class="btn-row">
-          <button class="btn-primary" onclick="f4Store()">序列化 + 存储</button>
+    <!-- F3: 类样式控制 -->
+    <section id="f3">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title-group">
+            <h2 class="card-title">F3 类样式控制</h2>
+            <span class="card-badge">CSS Class</span>
+          </div>
         </div>
-        <div class="btn-row">
-          <button class="btn-success" onclick="f4Restore()">restore()</button>
-          <button class="btn-danger" onclick="f4Clear()">清除所有</button>
+        <div class="card-content">
+          <p class="card-description">
+            为指定 ID 的高亮添加或移除 CSS 类。自动应用到所有匹配的包装元素。
+          </p>
+          <div class="demo-grid">
+            <div class="demo-content" id="f3-content">
+              <p>第四段：<a href="#">链接标签</a>也会被正确处理，不会破坏原有的 HTML 结构。</p>
+              <p>第五段包含一个 <code>code 标签</code> 用于测试代码块的排除。</p>
+            </div>
+            <div class="demo-actions">
+              <div class="btn-group">
+                <button class="btn btn-primary" onclick="f3SerializeAndRender()">序列化 + 渲染</button>
+              </div>
+              <div class="btn-group">
+                <button class="btn btn-secondary btn-sm" onclick="f3AddClass()">addClass('custom')</button>
+                <button class="btn btn-secondary btn-sm" onclick="f3RemoveClass()">removeClass('custom')</button>
+              </div>
+              <div class="output output-empty" id="f3-output">先序列化渲染，再添加类...</div>
+              <div class="source-info" id="f3-source"></div>
+            </div>
+          </div>
         </div>
-        <div class="demo-output" id="f4-output">序列化文本后点击"序列化+存储"，然后可以恢复...</div>
-        <div class="current-source" id="f4-source"></div>
       </div>
-    </div>
-  </div>
+    </section>
 
-  <!-- F5: 清除功能 -->
-  <div class="section">
-    <div class="section-header">
-      <h2 class="section-title">F5 清除功能</h2>
-      <span class="section-badge">Remove</span>
-    </div>
-    <p class="section-desc">
-      清除单个高亮或所有高亮。
-    </p>
-    <div class="demo-area">
-      <div class="demo-content" id="f5-content">
-        <p>第八段：这是用于测试清除功能的段落。选择文本并渲染后，可以单独移除或全部清除。</p>
-        <p>第九段：<strong>加粗</strong>和<em>斜体</em>标签内容。</p>
-      </div>
-      <div class="demo-actions">
-        <div class="btn-row">
-          <button class="btn-primary" onclick="f5SerializeAndRender()">序列化 + 渲染</button>
+    <!-- F4: 批量回显 -->
+    <section id="f4">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title-group">
+            <h2 class="card-title">F4 批量回显</h2>
+            <span class="card-badge">Restore</span>
+          </div>
         </div>
-        <div class="btn-row">
-          <button class="btn-danger" onclick="f5Remove()">remove(id)</button>
-          <button class="btn-danger" onclick="f5RemoveAll()">removeAll()</button>
+        <div class="card-content">
+          <p class="card-description">
+            使用 <code>fromStore()</code> 创建 Source，<code>restore()</code> 批量渲染。
+          </p>
+          <div class="demo-grid">
+            <div class="demo-content" id="f4-content">
+              <p>第六段文字，用于测试批量回显功能。选择部分文本后可以存储起来。</p>
+              <p>第七段：<strong>加粗文本</strong>和<em>斜体文本</em>混合。</p>
+            </div>
+            <div class="demo-actions">
+              <div class="btn-group">
+                <button class="btn btn-primary" onclick="f4Store()">序列化 + 存储</button>
+              </div>
+              <div class="btn-group">
+                <button class="btn btn-success btn-sm" onclick="f4Restore()">restore()</button>
+                <button class="btn btn-danger btn-sm" onclick="f4Clear()">清除所有</button>
+              </div>
+              <div class="output output-empty" id="f4-output">序列化文本后点击"序列化+存储"，然后可以恢复...</div>
+              <div class="source-info" id="f4-source"></div>
+            </div>
+          </div>
         </div>
-        <div class="demo-output" id="f5-output">先渲染高亮，再测试清除...</div>
-        <div class="current-source" id="f5-source"></div>
       </div>
-    </div>
-  </div>
+    </section>
 
-  <!-- 工具方法 -->
-  <div class="section">
-    <div class="section-header">
-      <h2 class="section-title">工具方法</h2>
-      <span class="section-badge">Utilities</span>
-    </div>
-    <p class="section-desc">
-      获取高亮信息、DOM 元素等辅助方法。
-    </p>
-    <div class="demo-area">
-      <div class="demo-content" id="util-content">
-        <p>工具方法测试区域。先在下方渲染一个高亮，然后使用工具方法查询信息。</p>
-        <p>第十段：<strong>加粗</strong>和<em>斜体</em>测试文本。</p>
-      </div>
-      <div class="demo-actions">
-        <div class="btn-row">
-          <button class="btn-primary" onclick="utilSerializeAndRender()">序列化 + 渲染</button>
+    <!-- F5: 清除功能 -->
+    <section id="f5">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title-group">
+            <h2 class="card-title">F5 清除功能</h2>
+            <span class="card-badge">Remove</span>
+          </div>
         </div>
-        <div class="btn-row">
-          <button class="btn-secondary" onclick="utilGetDoms()">getDoms()</button>
-          <button class="btn-secondary" onclick="utilGetSources()">getSources()</button>
-          <button class="btn-secondary" onclick="utilRemoveAll()">removeAll()</button>
+        <div class="card-content">
+          <p class="card-description">
+            清除单个高亮或所有高亮。
+          </p>
+          <div class="demo-grid">
+            <div class="demo-content" id="f5-content">
+              <p>第八段：这是用于测试清除功能的段落。选择文本并渲染后，可以单独移除或全部清除。</p>
+              <p>第九段：<strong>加粗</strong>和<em>斜体</em>标签内容。</p>
+            </div>
+            <div class="demo-actions">
+              <div class="btn-group">
+                <button class="btn btn-primary" onclick="f5SerializeAndRender()">序列化 + 渲染</button>
+              </div>
+              <div class="btn-group">
+                <button class="btn btn-danger btn-sm" onclick="f5Remove()">remove(id)</button>
+                <button class="btn btn-danger btn-sm" onclick="f5RemoveAll()">removeAll()</button>
+              </div>
+              <div class="output output-empty" id="f5-output">先渲染高亮，再测试清除...</div>
+              <div class="source-info" id="f5-source"></div>
+            </div>
+          </div>
         </div>
-        <div class="demo-output" id="util-output">工具方法输出...</div>
       </div>
-    </div>
-  </div>
+    </section>
 
-  <!-- 操作日志 -->
-  <div class="log-panel">
-    <h3>操作日志</h3>
-    <div id="log"></div>
+    <!-- 工具方法 -->
+    <section id="utils">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title-group">
+            <h2 class="card-title">工具方法</h2>
+            <span class="card-badge">Utilities</span>
+          </div>
+        </div>
+        <div class="card-content">
+          <p class="card-description">
+            获取高亮信息、DOM 元素等辅助方法。
+          </p>
+          <div class="demo-grid">
+            <div class="demo-content" id="util-content">
+              <p>工具方法测试区域。先在下方渲染一个高亮，然后使用工具方法查询信息。</p>
+              <p>第十段：<strong>加粗</strong>和<em>斜体</em>测试文本。</p>
+            </div>
+            <div class="demo-actions">
+              <div class="btn-group">
+                <button class="btn btn-primary" onclick="utilSerializeAndRender()">序列化 + 渲染</button>
+              </div>
+              <div class="btn-group">
+                <button class="btn btn-secondary btn-sm" onclick="utilGetDoms()">getDoms()</button>
+                <button class="btn btn-secondary btn-sm" onclick="utilGetSources()">getSources()</button>
+                <button class="btn btn-danger btn-sm" onclick="utilRemoveAll()">removeAll()</button>
+              </div>
+              <div class="output output-empty" id="util-output">工具方法输出...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>
+        <a href="https://github.com/ittking/web-highlighter-plus" target="_blank">GitHub</a> ·
+        <a href="https://www.npmjs.com/package/web-highlighter-plus" target="_blank">npm</a>
+      </p>
+    </footer>
+
+    <!-- Log Panel -->
+    <div class="log-panel">
+      <div class="log-header">
+        <h3 class="log-title">操作日志</h3>
+      </div>
+      <div class="log-list" id="log"></div>
+    </div>
   </div>
 
   <script type="module">
     import { HighlighterPlus } from './src/index.ts';
 
-    // Initialize highlighter
     const hp = new HighlighterPlus({
       root: document.body,
       wrapTag: 'span',
@@ -487,42 +816,36 @@
       verbose: false
     });
 
-    // Store sources per section
     const sources = {
-      f1: null,
-      f2: null,
-      f3: null,
-      f4: [],
-      f5: null,
-      util: null
+      f1: null, f2: null, f3: null, f4: [], f5: null, util: null
     };
 
-    // Logging helper
     function addLog(message) {
       const time = new Date().toLocaleTimeString();
       const entry = document.createElement('div');
       entry.className = 'log-entry';
-      entry.innerHTML = `<span class="log-time">${time}</span>${message}`;
+      entry.innerHTML = `<span class="log-time">${time}</span><span>${message}</span>`;
       const logPanel = document.getElementById('log');
       logPanel.insertBefore(entry, logPanel.firstChild);
     }
 
     function output(id, message) {
-      document.getElementById(id).textContent = message;
-      addLog(message);
+      const el = document.getElementById(id);
+      el.textContent = message;
+      el.classList.remove('output-empty');
+      addLog(message.split('\n')[0]);
     }
 
     function showSource(id, source) {
       const el = document.getElementById(id);
       if (!source) {
-        el.textContent = '';
+        el.innerHTML = '';
         return;
       }
       const text = source.text ? `"${source.text.substring(0, 15)}..."` : `${source.length} 个存储`;
-      el.innerHTML = `<strong>当前 Source:</strong> ${text}<br><code>id: ${source.id?.substring(0, 8)}...</code>`;
+      el.innerHTML = `当前 Source: ${text}<code>id: ${source.id?.substring(0, 8)}...</code>`;
     }
 
-    // ========== F1: 序列化 ==========
     window.f1Serialize = function() {
       const selection = window.getSelection();
       if (selection.isCollapsed) {
@@ -550,7 +873,6 @@
       }
     };
 
-    // ========== F2: 渲染 ==========
     window.f2SerializeAndRender = function() {
       const selection = window.getSelection();
       if (selection.isCollapsed) {
@@ -564,7 +886,6 @@
         return;
       }
       selection.removeAllRanges();
-
       const doms = hp.render(sources.f2);
       if (doms.length > 0) {
         const htmls = doms.map(d => d.outerHTML).join('\n');
@@ -575,7 +896,6 @@
       }
     };
 
-    // ========== F3: 类样式控制 ==========
     window.f3SerializeAndRender = function() {
       const selection = window.getSelection();
       if (selection.isCollapsed) {
@@ -589,7 +909,6 @@
         return;
       }
       selection.removeAllRanges();
-
       const doms = hp.render(sources.f3);
       if (doms.length > 0) {
         output('f3-output', `✅ 渲染成功 (${doms.length} 个元素)\n点击"添加 custom 类"试试`);
@@ -605,7 +924,7 @@
         return;
       }
       hp.addClass(sources.f3.id, 'custom');
-      output('f3-output', `✅ 已添加 'custom' 类\n查看 F3 区域的高亮样式变化`);
+      output('f3-output', `✅ 已添加 'custom' 类`);
     };
 
     window.f3RemoveClass = function() {
@@ -617,7 +936,6 @@
       output('f3-output', `✅ 已移除 'custom' 类`);
     };
 
-    // ========== F4: 批量回显 ==========
     window.f4Store = function() {
       const selection = window.getSelection();
       if (selection.isCollapsed) {
@@ -631,15 +949,14 @@
         return;
       }
       selection.removeAllRanges();
-
       sources.f4.push({ ...source });
-      output('f4-output', `✅ 已存储 (${sources.f4.length} 个 Source)\n点击"restore()"恢复所有存储的高亮`);
+      output('f4-output', `✅ 已存储 (${sources.f4.length} 个 Source)`);
       showSource('f4-source', { text: `${sources.f4.length} 个存储`, id: 'batch' });
     };
 
     window.f4Restore = function() {
       if (sources.f4.length === 0) {
-        output('f4-output', '⚠️ 没有存储的数据，请先序列化并存储');
+        output('f4-output', '⚠️ 没有存储的数据');
         return;
       }
       hp.removeAll();
@@ -654,7 +971,6 @@
       showSource('f4-source', null);
     };
 
-    // ========== F5: 清除功能 ==========
     window.f5SerializeAndRender = function() {
       const selection = window.getSelection();
       if (selection.isCollapsed) {
@@ -668,10 +984,9 @@
         return;
       }
       selection.removeAllRanges();
-
       const doms = hp.render(sources.f5);
       if (doms.length > 0) {
-        output('f5-output', `✅ 渲染成功 (${doms.length} 个元素)\n点击"remove(id)"移除此高亮`);
+        output('f5-output', `✅ 渲染成功 (${doms.length} 个元素)`);
         showSource('f5-source', sources.f5);
       } else {
         output('f5-output', '❌ 渲染失败');
@@ -680,11 +995,11 @@
 
     window.f5Remove = function() {
       if (!sources.f5) {
-        output('f5-output', '⚠️ 没有可移除的高亮，请先渲染');
+        output('f5-output', '⚠️ 没有可移除的高亮');
         return;
       }
       hp.remove(sources.f5.id);
-      output('f5-output', `✅ 已移除高亮 ${sources.f5.id.substring(0, 8)}...`);
+      output('f5-output', `✅ 已移除高亮`);
       sources.f5 = null;
       showSource('f5-source', null);
     };
@@ -696,7 +1011,6 @@
       showSource('f5-source', null);
     };
 
-    // ========== 工具方法 ==========
     window.utilSerializeAndRender = function() {
       const selection = window.getSelection();
       if (selection.isCollapsed) {
@@ -710,10 +1024,9 @@
         return;
       }
       selection.removeAllRanges();
-
       const doms = hp.render(sources.util);
       if (doms.length > 0) {
-        output('util-output', `✅ 渲染成功\n点击下方工具方法测试`);
+        output('util-output', `✅ 渲染成功`);
         showSource('util-source', sources.util);
       } else {
         output('util-output', '❌ 渲染失败');
@@ -723,16 +1036,16 @@
     window.utilGetDoms = function() {
       const doms = hp.getDoms();
       if (doms.length === 0) {
-        output('util-output', '⚠️ 没有高亮元素，请先渲染');
+        output('util-output', '⚠️ 没有高亮元素');
         return;
       }
-      const info = doms.map(d => `${d.tagName} class="${d.className}" id=${d.getAttribute('data-highlight-id')?.substring(0, 8)}...`);
-      output('util-output', `✅ ${doms.length} 个高亮元素:\n${info.join('\n')}`);
+      const info = doms.map(d => `${d.tagName}[${d.className}]`).join('\n');
+      output('util-output', `✅ ${doms.length} 个高亮元素:\n${info}`);
     };
 
     window.utilGetSources = function() {
       const srcs = hp.getSources();
-      output('util-output', `✅ 当前 ${srcs.length} 个 Source:\n${JSON.stringify(srcs, null, 2)}`);
+      output('util-output', `✅ 当前 ${srcs.length} 个 Source`);
     };
 
     window.utilRemoveAll = function() {
