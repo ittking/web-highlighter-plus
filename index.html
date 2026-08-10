@@ -238,7 +238,7 @@
       background: #e7f3ff;
       border-left: 3px solid #4a90d9;
       padding: 8px 12px;
-      margin: 12px 0;
+      margin-top: 12px;
       font-size: 13px;
       color: #333;
     }
@@ -268,6 +268,19 @@
       padding: 2px 6px;
       border-radius: 3px;
       font-family: Monaco, Menlo, monospace;
+    }
+
+    .current-source {
+      background: #fff3cd;
+      border: 1px solid #ffc107;
+      border-radius: 4px;
+      padding: 8px 12px;
+      margin-top: 8px;
+      font-size: 12px;
+    }
+
+    .current-source strong {
+      color: #856404;
     }
   </style>
 </head>
@@ -313,6 +326,7 @@
           <button class="btn-primary" onclick="f1SerializeSelection()">fromSelection()</button>
         </div>
         <div class="demo-output" id="f1-output">选择上方文本后，点击按钮序列化...</div>
+        <div class="current-source" id="f1-source"></div>
       </div>
     </div>
   </div>
@@ -324,7 +338,7 @@
       <span class="section-badge">Source → DOM</span>
     </div>
     <p class="section-desc">
-      将 Source 对象渲染为多个 span 包装元素。支持跨多个 HTML 标签（如 <code>&lt;strong&gt;</code>、<code>&lt;em&gt;</code>）的选区，每个标签内的文本会被独立包装。
+      将 Source 对象渲染为多个 span 包装元素。支持跨多个 HTML 标签（如 <code>&lt;strong&gt;</code>、<code>&lt;em&gt;</code>）的选区。
     </p>
     <div class="demo-area">
       <div class="demo-content" id="f2-content">
@@ -332,10 +346,10 @@
       </div>
       <div class="demo-actions">
         <div class="btn-row">
-          <button class="btn-success" onclick="f2Render()">render()</button>
-          <button class="btn-success" onclick="f2RenderAll()">renderAll()</button>
+          <button class="btn-primary" onclick="f2SerializeAndRender()">序列化 + 渲染</button>
         </div>
-        <div class="demo-output" id="f2-output">先序列化，再渲染...</div>
+        <div class="demo-output" id="f2-output">选择上方文本后，点击按钮...</div>
+        <div class="current-source" id="f2-source"></div>
       </div>
     </div>
     <div class="info-text">
@@ -359,10 +373,14 @@
       </div>
       <div class="demo-actions">
         <div class="btn-row">
+          <button class="btn-primary" onclick="f3SerializeAndRender()">序列化 + 渲染</button>
+        </div>
+        <div class="btn-row">
           <button class="btn-warning" onclick="f3AddClass()">addClass('custom')</button>
           <button class="btn-secondary" onclick="f3RemoveClass()">removeClass('custom')</button>
         </div>
-        <div class="demo-output" id="f3-output">先序列化并渲染，再添加类...</div>
+        <div class="demo-output" id="f3-output">先序列化渲染，再添加类...</div>
+        <div class="current-source" id="f3-source"></div>
       </div>
     </div>
   </div>
@@ -374,20 +392,23 @@
       <span class="section-badge">Restore</span>
     </div>
     <p class="section-desc">
-      从存储的数据批量恢复高亮。使用 <code>fromStore()</code> 创建 Source，<code>restore()</code> 批量渲染。
+      使用 <code>fromStore()</code> 创建 Source，<code>restore()</code> 批量渲染。
     </p>
     <div class="demo-area">
       <div class="demo-content" id="f4-content">
-        <p>第六段文字，用于测试批量回显功能。选择部分文本序列化后，可以清除再恢复。</p>
+        <p>第六段文字，用于测试批量回显功能。选择部分文本后可以存储起来。</p>
         <p>第七段：<strong>加粗文本</strong>和<em>斜体文本</em>混合。</p>
       </div>
       <div class="demo-actions">
         <div class="btn-row">
-          <button class="btn-success" onclick="f4Store()">fromStore()</button>
-          <button class="btn-success" onclick="f4Restore()">restore()</button>
-          <button class="btn-primary" onclick="f4GetSources()">getSources()</button>
+          <button class="btn-primary" onclick="f4Store()">序列化 + 存储</button>
         </div>
-        <div class="demo-output" id="f4-output">先序列化，存储后再恢复...</div>
+        <div class="btn-row">
+          <button class="btn-success" onclick="f4Restore()">restore()</button>
+          <button class="btn-danger" onclick="f4Clear()">清除所有</button>
+        </div>
+        <div class="demo-output" id="f4-output">序列化文本后点击"序列化+存储"，然后可以恢复...</div>
+        <div class="current-source" id="f4-source"></div>
       </div>
     </div>
   </div>
@@ -399,7 +420,7 @@
       <span class="section-badge">Remove</span>
     </div>
     <p class="section-desc">
-      清除单个高亮或所有高亮。<code>remove()</code> 移除指定 ID 的高亮，<code>removeAll()</code> 移除所有高亮。
+      清除单个高亮或所有高亮。
     </p>
     <div class="demo-area">
       <div class="demo-content" id="f5-content">
@@ -408,10 +429,14 @@
       </div>
       <div class="demo-actions">
         <div class="btn-row">
+          <button class="btn-primary" onclick="f5SerializeAndRender()">序列化 + 渲染</button>
+        </div>
+        <div class="btn-row">
           <button class="btn-danger" onclick="f5Remove()">remove(id)</button>
           <button class="btn-danger" onclick="f5RemoveAll()">removeAll()</button>
         </div>
         <div class="demo-output" id="f5-output">先渲染高亮，再测试清除...</div>
+        <div class="current-source" id="f5-source"></div>
       </div>
     </div>
   </div>
@@ -425,37 +450,20 @@
     <p class="section-desc">
       获取高亮信息、DOM 元素等辅助方法。
     </p>
-    <table class="api-table">
-      <thead>
-        <tr>
-          <th>方法</th>
-          <th>说明</th>
-          <th>操作</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><code>getDoms(id?)</code></td>
-          <td>获取包装元素，不传 id 返回全部</td>
-          <td><button class="btn-secondary" onclick="utilGetDoms()">执行</button></td>
-        </tr>
-        <tr>
-          <td><code>getIdByDom(dom)</code></td>
-          <td>从 DOM 节点获取高亮 ID</td>
-          <td><button class="btn-secondary" onclick="utilGetIdByDom()">执行</button></td>
-        </tr>
-        <tr>
-          <td><code>getSource(id)</code></td>
-          <td>根据 ID 获取 Source</td>
-          <td><button class="btn-secondary" onclick="utilGetSource()">执行</button></td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="demo-area" style="margin-top: 16px;">
+    <div class="demo-area">
       <div class="demo-content" id="util-content">
-        <p>工具方法测试区域。选择并渲染一段文本，然后使用工具方法查询信息。</p>
+        <p>工具方法测试区域。先在下方渲染一个高亮，然后使用工具方法查询信息。</p>
+        <p>第十段：<strong>加粗</strong>和<em>斜体</em>测试文本。</p>
       </div>
       <div class="demo-actions">
+        <div class="btn-row">
+          <button class="btn-primary" onclick="utilSerializeAndRender()">序列化 + 渲染</button>
+        </div>
+        <div class="btn-row">
+          <button class="btn-secondary" onclick="utilGetDoms()">getDoms()</button>
+          <button class="btn-secondary" onclick="utilGetSources()">getSources()</button>
+          <button class="btn-secondary" onclick="utilRemoveAll()">removeAll()</button>
+        </div>
         <div class="demo-output" id="util-output">工具方法输出...</div>
       </div>
     </div>
@@ -472,16 +480,22 @@
 
     // Initialize highlighter
     const hp = new HighlighterPlus({
-      root: document.getElementById('f1-content').parentElement,
+      root: document.body,
       wrapTag: 'span',
       className: 'highlight-wrap',
       exceptSelectors: ['code', 'pre', 'a'],
       verbose: false
     });
 
-    // Store current source for demo
-    let currentSource = null;
-    let storedSources = [];
+    // Store sources per section
+    const sources = {
+      f1: null,
+      f2: null,
+      f3: null,
+      f4: [],
+      f5: null,
+      util: null
+    };
 
     // Logging helper
     function addLog(message) {
@@ -498,6 +512,16 @@
       addLog(message);
     }
 
+    function showSource(id, source) {
+      const el = document.getElementById(id);
+      if (!source) {
+        el.textContent = '';
+        return;
+      }
+      const text = source.text ? `"${source.text.substring(0, 15)}..."` : `${source.length} 个存储`;
+      el.innerHTML = `<strong>当前 Source:</strong> ${text}<br><code>id: ${source.id?.substring(0, 8)}...</code>`;
+    }
+
     // ========== F1: 序列化 ==========
     window.f1Serialize = function() {
       const selection = window.getSelection();
@@ -506,9 +530,10 @@
         return;
       }
       const range = selection.getRangeAt(0);
-      currentSource = hp.fromRange(range);
-      if (currentSource) {
-        output('f1-output', `✅ 序列化成功\n${JSON.stringify(currentSource, null, 2)}`);
+      sources.f1 = hp.fromRange(range);
+      if (sources.f1) {
+        output('f1-output', `✅ fromRange 成功\n${JSON.stringify(sources.f1, null, 2)}`);
+        showSource('f1-source', sources.f1);
         selection.removeAllRanges();
       } else {
         output('f1-output', '❌ 序列化失败');
@@ -516,127 +541,204 @@
     };
 
     window.f1SerializeSelection = function() {
-      currentSource = hp.fromSelection();
-      if (currentSource) {
-        output('f1-output', `✅ fromSelection 成功\n${JSON.stringify(currentSource, null, 2)}`);
+      sources.f1 = hp.fromSelection();
+      if (sources.f1) {
+        output('f1-output', `✅ fromSelection 成功\n${JSON.stringify(sources.f1, null, 2)}`);
+        showSource('f1-source', sources.f1);
       } else {
         output('f1-output', '⚠️ 请先选择文本！');
       }
     };
 
     // ========== F2: 渲染 ==========
-    window.f2Render = function() {
-      if (!currentSource) {
-        output('f2-output', '⚠️ 请先序列化！');
+    window.f2SerializeAndRender = function() {
+      const selection = window.getSelection();
+      if (selection.isCollapsed) {
+        output('f2-output', '⚠️ 请先选择文本！');
         return;
       }
-      const doms = hp.render(currentSource);
+      const range = selection.getRangeAt(0);
+      sources.f2 = hp.fromRange(range);
+      if (!sources.f2) {
+        output('f2-output', '❌ 序列化失败');
+        return;
+      }
+      selection.removeAllRanges();
+
+      const doms = hp.render(sources.f2);
       if (doms.length > 0) {
         const htmls = doms.map(d => d.outerHTML).join('\n');
         output('f2-output', `✅ 渲染成功 (${doms.length} 个元素)\n\n${htmls}`);
+        showSource('f2-source', sources.f2);
       } else {
         output('f2-output', '❌ 渲染失败');
       }
     };
 
-    window.f2RenderAll = function() {
-      if (storedSources.length === 0) {
-        output('f2-output', '⚠️ 没有存储的 Source，请先序列化');
+    // ========== F3: 类样式控制 ==========
+    window.f3SerializeAndRender = function() {
+      const selection = window.getSelection();
+      if (selection.isCollapsed) {
+        output('f3-output', '⚠️ 请先选择文本！');
         return;
       }
-      const doms = hp.renderAll(storedSources);
-      output('f2-output', `✅ 批量渲染成功 (${doms.length} 个元素)`);
+      const range = selection.getRangeAt(0);
+      sources.f3 = hp.fromRange(range);
+      if (!sources.f3) {
+        output('f3-output', '❌ 序列化失败');
+        return;
+      }
+      selection.removeAllRanges();
+
+      const doms = hp.render(sources.f3);
+      if (doms.length > 0) {
+        output('f3-output', `✅ 渲染成功 (${doms.length} 个元素)\n点击"添加 custom 类"试试`);
+        showSource('f3-source', sources.f3);
+      } else {
+        output('f3-output', '❌ 渲染失败');
+      }
     };
 
-    // ========== F3: 类样式控制 ==========
     window.f3AddClass = function() {
-      if (!currentSource) {
+      if (!sources.f3) {
         output('f3-output', '⚠️ 请先序列化并渲染！');
         return;
       }
-      hp.addClass(currentSource.id, 'custom');
-      output('f3-output', `✅ 已添加 'custom' 类到 ${currentSource.id.substring(0, 8)}...`);
+      hp.addClass(sources.f3.id, 'custom');
+      output('f3-output', `✅ 已添加 'custom' 类\n查看 F3 区域的高亮样式变化`);
     };
 
     window.f3RemoveClass = function() {
-      if (!currentSource) {
+      if (!sources.f3) {
         output('f3-output', '⚠️ 请先序列化并渲染！');
         return;
       }
-      hp.removeClass(currentSource.id, 'custom');
+      hp.removeClass(sources.f3.id, 'custom');
       output('f3-output', `✅ 已移除 'custom' 类`);
     };
 
     // ========== F4: 批量回显 ==========
     window.f4Store = function() {
-      if (!currentSource) {
-        output('f4-output', '⚠️ 请先序列化！');
+      const selection = window.getSelection();
+      if (selection.isCollapsed) {
+        output('f4-output', '⚠️ 请先选择文本！');
         return;
       }
-      storedSources.push({ ...currentSource });
-      output('f4-output', `✅ 已存储 (${storedSources.length} 个)\n${JSON.stringify(currentSource, null, 2)}`);
+      const range = selection.getRangeAt(0);
+      const source = hp.fromRange(range);
+      if (!source) {
+        output('f4-output', '❌ 序列化失败');
+        return;
+      }
+      selection.removeAllRanges();
+
+      sources.f4.push({ ...source });
+      output('f4-output', `✅ 已存储 (${sources.f4.length} 个 Source)\n点击"restore()"恢复所有存储的高亮`);
+      showSource('f4-source', { text: `${sources.f4.length} 个存储`, id: 'batch' });
     };
 
     window.f4Restore = function() {
-      if (storedSources.length === 0) {
-        output('f4-output', '⚠️ 没有存储的数据');
+      if (sources.f4.length === 0) {
+        output('f4-output', '⚠️ 没有存储的数据，请先序列化并存储');
         return;
       }
-      const doms = hp.restore(storedSources);
+      hp.removeAll();
+      const doms = hp.restore(sources.f4);
       output('f4-output', `✅ 批量恢复成功 (${doms.length} 个元素)`);
     };
 
-    window.f4GetSources = function() {
-      const sources = hp.getSources();
-      output('f4-output', `当前 ${sources.length} 个 Source:\n${JSON.stringify(sources, null, 2)}`);
+    window.f4Clear = function() {
+      hp.removeAll();
+      sources.f4 = [];
+      output('f4-output', '🗑️ 已清除所有高亮和存储');
+      showSource('f4-source', null);
     };
 
     // ========== F5: 清除功能 ==========
-    window.f5Remove = function() {
-      if (!currentSource) {
-        output('f5-output', '⚠️ 没有可移除的高亮');
+    window.f5SerializeAndRender = function() {
+      const selection = window.getSelection();
+      if (selection.isCollapsed) {
+        output('f5-output', '⚠️ 请先选择文本！');
         return;
       }
-      hp.remove(currentSource.id);
-      currentSource = null;
-      output('f5-output', '✅ 已移除该高亮');
+      const range = selection.getRangeAt(0);
+      sources.f5 = hp.fromRange(range);
+      if (!sources.f5) {
+        output('f5-output', '❌ 序列化失败');
+        return;
+      }
+      selection.removeAllRanges();
+
+      const doms = hp.render(sources.f5);
+      if (doms.length > 0) {
+        output('f5-output', `✅ 渲染成功 (${doms.length} 个元素)\n点击"remove(id)"移除此高亮`);
+        showSource('f5-source', sources.f5);
+      } else {
+        output('f5-output', '❌ 渲染失败');
+      }
+    };
+
+    window.f5Remove = function() {
+      if (!sources.f5) {
+        output('f5-output', '⚠️ 没有可移除的高亮，请先渲染');
+        return;
+      }
+      hp.remove(sources.f5.id);
+      output('f5-output', `✅ 已移除高亮 ${sources.f5.id.substring(0, 8)}...`);
+      sources.f5 = null;
+      showSource('f5-source', null);
     };
 
     window.f5RemoveAll = function() {
       hp.removeAll();
-      currentSource = null;
-      storedSources = [];
+      sources.f5 = null;
       output('f5-output', '🗑️ 已清除所有高亮');
+      showSource('f5-source', null);
     };
 
     // ========== 工具方法 ==========
+    window.utilSerializeAndRender = function() {
+      const selection = window.getSelection();
+      if (selection.isCollapsed) {
+        output('util-output', '⚠️ 请先选择文本！');
+        return;
+      }
+      const range = selection.getRangeAt(0);
+      sources.util = hp.fromRange(range);
+      if (!sources.util) {
+        output('util-output', '❌ 序列化失败');
+        return;
+      }
+      selection.removeAllRanges();
+
+      const doms = hp.render(sources.util);
+      if (doms.length > 0) {
+        output('util-output', `✅ 渲染成功\n点击下方工具方法测试`);
+        showSource('util-source', sources.util);
+      } else {
+        output('util-output', '❌ 渲染失败');
+      }
+    };
+
     window.utilGetDoms = function() {
       const doms = hp.getDoms();
       if (doms.length === 0) {
-        output('util-output', '⚠️ 没有高亮元素');
+        output('util-output', '⚠️ 没有高亮元素，请先渲染');
         return;
       }
-      const info = doms.map(d => `${d.tagName}[${d.className}] → ${d.getAttribute('data-highlight-id')?.substring(0, 8)}...`);
+      const info = doms.map(d => `${d.tagName} class="${d.className}" id=${d.getAttribute('data-highlight-id')?.substring(0, 8)}...`);
       output('util-output', `✅ ${doms.length} 个高亮元素:\n${info.join('\n')}`);
     };
 
-    window.utilGetIdByDom = function() {
-      const doms = hp.getDoms();
-      if (doms.length === 0) {
-        output('util-output', '⚠️ 没有高亮元素');
-        return;
-      }
-      const id = hp.getIdByDom(doms[0]);
-      output('util-output', `✅ 第一个元素的 ID: ${id}`);
+    window.utilGetSources = function() {
+      const srcs = hp.getSources();
+      output('util-output', `✅ 当前 ${srcs.length} 个 Source:\n${JSON.stringify(srcs, null, 2)}`);
     };
 
-    window.utilGetSource = function() {
-      if (!currentSource) {
-        output('util-output', '⚠️ 没有当前的 Source');
-        return;
-      }
-      const source = hp.getSource(currentSource.id);
-      output('util-output', `✅ Source:\n${JSON.stringify(source, null, 2)}`);
+    window.utilRemoveAll = function() {
+      hp.removeAll();
+      sources.util = null;
+      output('util-output', '🗑️ 已清除所有高亮');
     };
 
     addLog('🚀 初始化完成');
