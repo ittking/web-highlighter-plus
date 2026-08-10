@@ -129,10 +129,10 @@ class y {
     const n = e.$node, i = r.$node, l = e.offset, c = r.offset;
     if (n === i && n instanceof Text)
       return this.getNodesIfSameStartEnd(n, l, c, s || void 0);
-    const u = [t], N = [], E = (x) => !s || s.length === 0 ? !1 : s.some((h) => h.startsWith(".") ? x.classList.contains(h.substring(1)) : h.startsWith("#") ? x.id === h.substring(1) : x.tagName === h.toUpperCase());
+    const u = [t], T = [], S = (x) => !s || s.length === 0 ? !1 : s.some((h) => h.startsWith(".") ? x.classList.contains(h.substring(1)) : h.startsWith("#") ? x.id === h.substring(1) : x.tagName === h.toUpperCase());
     let w = !1, d;
     for (; (d = u.pop()) !== void 0; ) {
-      if (d.nodeType === Node.ELEMENT_NODE && E(d))
+      if (d.nodeType === Node.ELEMENT_NODE && S(d))
         continue;
       const x = d.childNodes;
       for (let h = x.length - 1; h >= 0; h--)
@@ -141,7 +141,7 @@ class y {
         if (d.nodeType === Node.TEXT_NODE) {
           d.splitText(l);
           const h = d.nextSibling;
-          N.push({
+          T.push({
             $node: h,
             type: "text",
             splitType: "head"
@@ -151,20 +151,20 @@ class y {
       } else if (d === i) {
         if (d.nodeType === Node.TEXT_NODE) {
           const h = d;
-          h.splitText(c), N.push({
+          h.splitText(c), T.push({
             $node: h,
             type: "text",
             splitType: "tail"
           });
         }
         break;
-      } else w && d.nodeType === Node.TEXT_NODE && N.push({
+      } else w && d.nodeType === Node.TEXT_NODE && T.push({
         $node: d,
         type: "text",
         splitType: "none"
       });
     }
-    return N;
+    return T;
   }
   /**
    * Serialize a Range to Source
@@ -203,7 +203,7 @@ function _(o, t) {
   const e = Array.isArray(t) ? t : t.split(/\s+/);
   o.classList.add(...e);
 }
-function R(o, t) {
+function C(o, t) {
   const e = Array.isArray(t) ? t : t.split(/\s+/);
   o.classList.remove(...e);
 }
@@ -220,7 +220,7 @@ function A(o, t) {
     r = n;
   }
 }
-class C {
+class R {
   constructor(t, e, r, s = null) {
     a(this, "$root");
     a(this, "wrapTag");
@@ -351,7 +351,7 @@ class C {
   removeClassFromHighlight(t, e) {
     const r = m(this.$root, t, this.wrapTag);
     for (const s of r)
-      R(s, e);
+      C(s, e);
   }
   /**
    * Get all wrapper elements
@@ -389,7 +389,7 @@ function X() {
     return (o === "x" ? t : t & 3 | 8).toString(16);
   });
 }
-class T {
+class N {
   constructor(t, e, r, s) {
     a(this, "start");
     a(this, "end");
@@ -406,7 +406,7 @@ class T {
     if (r.nodeType !== Node.TEXT_NODE || s.nodeType !== Node.TEXT_NODE)
       return console.warn("web-highlighter-plus: Only text nodes can be highlighted"), null;
     const n = e || X(), i = t.toString();
-    return new T(
+    return new N(
       { $node: r, offset: t.startOffset },
       { $node: s, offset: t.endOffset },
       i,
@@ -420,7 +420,7 @@ class T {
     const e = window.getSelection();
     if (!e || e.isCollapsed) return null;
     const r = e.getRangeAt(0);
-    return T.fromRange(r, t);
+    return N.fromRange(r, t);
   }
   /**
    * Freeze the range before rendering
@@ -436,7 +436,7 @@ class T {
     t && t.removeAllRanges();
   }
 }
-class S {
+class E {
   constructor(t, e, r, s, n) {
     a(this, "id");
     a(this, "text");
@@ -449,7 +449,7 @@ class S {
    * Create from plain object (e.g., from JSON.parse)
    */
   static from(t) {
-    return new S(
+    return new E(
       t.id || "",
       t.text || "",
       t.startMeta || { parentTagName: "", parentIndex: -1, textOffset: 0 },
@@ -485,7 +485,7 @@ class P {
     a(this, "verbose");
     a(this, "painter");
     a(this, "_sources", /* @__PURE__ */ new Map());
-    this.$root = t.root || document.body, this.wrapTag = t.wrapTag || D, this.className = t.className || v, this.exceptSelectors = t.exceptSelectors ?? null, this.verbose = t.verbose ?? !1, this.painter = new C(
+    this.$root = t.root || document.body, this.wrapTag = t.wrapTag || D, this.className = t.className || v, this.exceptSelectors = t.exceptSelectors ?? null, this.verbose = t.verbose ?? !1, this.painter = new R(
       this.$root,
       this.wrapTag,
       this.className,
@@ -497,7 +497,7 @@ class P {
    * F1: Serialize - converts Range to storable Source
    */
   fromRange(t) {
-    const e = T.fromRange(t);
+    const e = N.fromRange(t);
     if (!e) return null;
     const r = y.serialize(
       e.start,
@@ -512,10 +512,10 @@ class P {
    * Create a Source from a window selection
    */
   fromSelection() {
-    var e;
-    return T.fromSelection() ? (T.removeDomRange(), this.fromRange(
-      ((e = document.getSelection()) == null ? void 0 : e.getRangeAt(0)) || document.createRange()
-    )) : null;
+    const t = document.getSelection();
+    if (!t || t.isCollapsed) return null;
+    const e = t.getRangeAt(0), r = this.fromRange(e);
+    return t.removeAllRanges(), r;
   }
   /**
    * Create Source from stored metadata (for restoration)
@@ -625,8 +625,8 @@ export {
   $ as ATTR_SPLIT_TYPE,
   v as DEFAULT_CLASS_NAME,
   D as DEFAULT_WRAP_TAG,
-  T as HighlightRange,
-  S as HighlightSource,
+  N as HighlightRange,
+  E as HighlightSource,
   P as HighlighterPlus,
   p as ID_DIVISION,
   H as ROOT_IDX,

@@ -21,10 +21,16 @@
     "highlight",
     "text-selection",
     "range",
-    "serialization"
+    "serialization",
+    "highlighter"
   ],
-  "author": "",
+  "author": "ittking",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ittking/web-highlighter-plus.git"
+  },
+  "homepage": "https://github.com/ittking/web-highlighter-plus",
   "devDependencies": {
     "typescript": "^5.4.0",
     "vite": "^5.4.0"
