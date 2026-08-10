@@ -16,8 +16,7 @@
     "dev": "vite",
     "build": "tsc -p tsconfig.lib.json && vite build --config vite.lib.config.ts",
     "build:demo": "vite build",
-    "preview": "vite preview",
-    "preview:demo": "vite preview"
+    "preview": "vite preview"
   },
   "keywords": [
     "highlight",
