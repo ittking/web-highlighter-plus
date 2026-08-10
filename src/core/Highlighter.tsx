@@ -64,13 +64,14 @@ export class HighlighterPlus {
    * Create a Source from a window selection
    */
   fromSelection(): Source | null {
-    const range = HighlightRange.fromSelection();
-    if (!range) return null;
+    const selection = document.getSelection();
+    if (!selection || selection.isCollapsed) return null;
 
-    HighlightRange.removeDomRange();
-    return this.fromRange(
-      document.getSelection()?.getRangeAt(0) || document.createRange()
-    );
+    const range = selection.getRangeAt(0);
+    const source = this.fromRange(range);
+
+    selection.removeAllRanges();
+    return source;
   }
 
   /**
