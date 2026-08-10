@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>web-highlighter-plus Demo</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+
+    h1 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 30px;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 20px;
+    }
+
+    .main-content {
+      background: white;
+      border-radius: 8px;
+      padding: 30px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .panel {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .panel h3 {
+      margin-top: 0;
+      margin-bottom: 15px;
+      color: #333;
+      font-size: 16px;
+    }
+
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    button {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .btn-primary {
+      background: #4a90d9;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #357abd;
+    }
+
+    .btn-secondary {
+      background: #6c757d;
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: #545b62;
+    }
+
+    .btn-danger {
+      background: #dc3545;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #c82333;
+    }
+
+    .btn-success {
+      background: #28a745;
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: #218838;
+    }
+
+    #output {
+      background: #f8f9fa;
+      border: 1px solid #e9ecef;
+      border-radius: 6px;
+      padding: 15px;
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 12px;
+      max-height: 400px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .test-content {
+      line-height: 1.8;
+      font-size: 16px;
+      color: #333;
+    }
+
+    .test-content p {
+      margin: 1em 0;
+    }
+
+    .test-content strong {
+      color: #d63384;
+    }
+
+    .test-content em {
+      color: #0d6efd;
+      font-style: italic;
+    }
+
+    .test-content div {
+      background: #f8f9fa;
+      padding: 10px;
+      border-radius: 4px;
+      margin: 10px 0;
+    }
+
+    .test-content span {
+      color: #198754;
+    }
+
+    /* Highlight styles */
+    .highlight-wrap {
+      background: #ffeb3b;
+      border-radius: 2px;
+    }
+
+    .highlight-wrap.active {
+      background: #ffc107;
+    }
+
+    .highlight-wrap.custom {
+      background: #cfe2ff;
+      border-bottom: 2px solid #0d6efd;
+    }
+
+    .log-panel {
+      font-size: 12px;
+    }
+
+    .log-entry {
+      padding: 5px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .log-entry:last-child {
+      border-bottom: none;
+    }
+
+    .log-time {
+      color: #999;
+      margin-right: 8px;
+    }
+
+    .instructions {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <h1>web-highlighter-plus</h1>
+  <p class="subtitle">现代化的高亮文本处理库 - 序列化、渲染、批量回显</p>
+
+  <div class="container">
+    <div class="main-content">
+      <h3>测试内容区域</h3>
+      <p>请在下方文本中<strong>选择文字</strong>，然后点击右侧按钮进行测试。</p>
+
+      <div id="root" class="test-content">
+        <p>这是第一段文字，包含<strong>加粗文本</strong>和<em>斜体文本</em>。你可以尝试跨标签选择文字，比如从"第一段文字"选中到"斜体文本"。</p>
+
+        <p>第二段文字，用于测试跨标签选区。选择下面这段话中的一部分，看看能否正确处理。</p>
+
+        <div>div 容器内的<span>span 标签</span>文本，以及<b>加粗标签</b>和<i>斜体标签</i>。</div>
+
+        <p>第三段：<a href="#">链接标签</a>也会被正确处理，不会破坏原有的 HTML 结构。</p>
+
+        <p>第四段包含一个 <code>code 标签</code> 用于测试代码块的排除。选择时，code 标签内的内容默认不会被包含。</p>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <div class="panel">
+        <h3>操作</h3>
+        <div class="controls">
+          <button class="btn-primary" id="btnSerialize">1. 序列化选区</button>
+          <button class="btn-success" id="btnRender">2. 渲染 Source</button>
+          <button class="btn-secondary" id="btnAddClass">添加 custom 类</button>
+          <button class="btn-secondary" id="btnRemoveClass">移除 custom 类</button>
+          <button class="btn-danger" id="btnClear">清除所有</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>当前 Source</h3>
+        <div id="output">选择一个或多个文本后，点击"序列化选区"查看结果...</div>
+      </div>
+
+      <div class="panel">
+        <h3>渲染的 DOM</h3>
+        <div id="dom-output">点击"渲染 Source"后，这里显示包装后的 DOM 结构...</div>
+      </div>
+
+      <div class="panel">
+        <h3>使用说明</h3>
+        <div class="instructions">
+          <p><strong>1. 序列化：</strong> 选择页面上的文本，点击按钮获取 Source 对象。</p>
+          <p><strong>2. 渲染：</strong> 点击"渲染 Source"将选中的文本包装成 span 高亮。</p>
+          <p><strong>3. 样式控制：</strong> 使用"添加/移除类"按钮切换样式。</p>
+          <p><strong>4. 清除：</strong> 清除所有高亮。</p>
+        </div>
+      </div>
+
+      <div class="panel log-panel">
+        <h3>操作日志</h3>
+        <div id="log"></div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { HighlighterPlus } from './src/index.ts';
+
+    // Initialize highlighter
+    const hp = new HighlighterPlus({
+      root: document.getElementById('root'),
+      wrapTag: 'span',
+      className: 'highlight-wrap',
+      exceptSelectors: ['code', 'pre', 'a'],
+      verbose: true
+    });
+
+    // Store current source for rendering
+    let currentSource = null;
+
+    // DOM elements
+    const btnSerialize = document.getElementById('btnSerialize');
+    const btnRender = document.getElementById('btnRender');
+    const btnAddClass = document.getElementById('btnAddClass');
+    const btnRemoveClass = document.getElementById('btnRemoveClass');
+    const btnClear = document.getElementById('btnClear');
+    const output = document.getElementById('output');
+    const domOutput = document.getElementById('dom-output');
+    const log = document.getElementById('log');
+
+    // Logging helper
+    function addLog(message) {
+      const time = new Date().toLocaleTimeString();
+      const entry = document.createElement('div');
+      entry.className = 'log-entry';
+      entry.innerHTML = `<span class="log-time">${time}</span>${message}`;
+      log.insertBefore(entry, log.firstChild);
+    }
+
+    // Serialize selection
+    btnSerialize.addEventListener('click', () => {
+      const selection = window.getSelection();
+
+      if (selection.isCollapsed) {
+        output.textContent = '请先选择一段文本！';
+        addLog('⚠️ 未选中任何文本');
+        return;
+      }
+
+      const range = selection.getRangeAt(0);
+      currentSource = hp.fromRange(range);
+
+      if (currentSource) {
+        output.textContent = JSON.stringify(currentSource, null, 2);
+        addLog(`✅ 序列化成功: ${currentSource.id.substring(0, 8)}...`);
+      } else {
+        output.textContent = '序列化失败，请选择文本节点';
+        addLog('❌ 序列化失败');
+      }
+    });
+
+    // Render source
+    btnRender.addEventListener('click', () => {
+      if (!currentSource) {
+        output.textContent = '请先序列化选区！';
+        addLog('⚠️ 没有可渲染的 Source');
+        return;
+      }
+
+      const doms = hp.render(currentSource);
+
+      if (doms.length > 0) {
+        output.textContent = JSON.stringify(currentSource, null, 2) + '\n\n渲染了 ' + doms.length + ' 个元素';
+        domOutput.textContent = doms.map(d => d.outerHTML).join('\n');
+        addLog(`✅ 渲染成功: ${doms.length} 个元素`);
+      } else {
+        output.textContent = '渲染失败，可能是内容已被移除';
+        domOutput.textContent = '渲染失败';
+        addLog('❌ 渲染失败');
+      }
+
+      // Clear selection
+      window.getSelection()?.removeAllRanges();
+    });
+
+    // Add class
+    btnAddClass.addEventListener('click', () => {
+      if (!currentSource) {
+        output.textContent = '请先序列化并渲染！';
+        return;
+      }
+
+      hp.addClass(currentSource.id, 'custom');
+      output.textContent = JSON.stringify(currentSource, null, 2) + '\n\n已添加 custom 类';
+      addLog(`🎨 添加 custom 类到 ${currentSource.id.substring(0, 8)}...`);
+    });
+
+    // Remove class
+    btnRemoveClass.addEventListener('click', () => {
+      if (!currentSource) {
+        output.textContent = '请先序列化并渲染！';
+        return;
+      }
+
+      hp.removeClass(currentSource.id, 'custom');
+      output.textContent = JSON.stringify(currentSource, null, 2) + '\n\n已移除 custom 类';
+      addLog(`🧹 移除 custom 类从 ${currentSource.id.substring(0, 8)}...`);
+    });
+
+    // Clear all
+    btnClear.addEventListener('click', () => {
+      hp.removeAll();
+      currentSource = null;
+      output.textContent = '已清除所有高亮';
+      domOutput.textContent = '已清除';
+      addLog('🗑️ 清除所有高亮');
+    });
+
+    addLog('🚀 初始化完成');
+  </script>
+</body>
+</html>
