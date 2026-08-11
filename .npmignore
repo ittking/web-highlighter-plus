@@ -1,0 +1,19 @@
+# 开发文件
+.claude/
+.github/
+.nojekyll
+CNAME
+index.html
+
+# 源文件
+src/
+tests/
+
+# 构建配置
+tsconfig*.json
+vite*.config.ts
+pnpm*.yaml
+
+# 文档
+docs/
+README.zh-CN.md
