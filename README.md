@@ -19,6 +19,7 @@ Since the original project had limited maintenance and couldn't meet my requirem
 - Fixed offset calculation algorithms
 - Better TypeScript type safety
 - More flexible API design
+- Event-driven interaction listeners
 
 ---
 
@@ -31,6 +32,7 @@ Since the original project had limited maintenance and couldn't meet my requirem
 | **F3 Class Control** | Add/remove CSS classes to all span wrapper elements with the specified ID |
 | **F4 Batch Restoration** | Restore highlights from locally stored or server-side data |
 | **F5 Clear Function** | Remove single highlight or all highlights |
+| **Event Listeners** | Listen to hover, hover-out, and click events on rendered highlights |
 
 ## Tech Stack
 
@@ -119,6 +121,47 @@ interface Options {
 | `addClass(id, className)` | `void` | Add CSS class |
 | `removeClass(id, className)` | `void` | Remove CSS class |
 
+### Event Listeners
+
+Listen to interactions with rendered highlights:
+
+```typescript
+// Hover enter
+hp.on('render:hover', ({ id, doms, event }) => {
+  console.log('hover', id, doms.length);
+  hp.addClass(id, 'active');
+});
+
+// Hover leave
+hp.on('render:hover-out', ({ id, doms, event }) => {
+  console.log('hover-out', id);
+  hp.removeClass(id, 'active');
+});
+
+// Click
+hp.on('render:click', ({ id, doms, event }) => {
+  console.log('click', id);
+  // doms contains all span elements with this ID (for cross-tag highlights)
+});
+
+// Remove listener
+hp.off('render:hover', handler);
+```
+
+**Event Types:**
+- `render:hover` - Mouse enters a highlight wrapper
+- `render:hover-out` - Mouse leaves a highlight wrapper
+- `render:click` - Click on a highlight wrapper
+
+**Event Data:**
+```typescript
+interface RenderEventData {
+  id: string;           // Highlight ID
+  doms: HTMLElement[]; // All span elements with this ID
+  event: MouseEvent;    // Original mouse event
+}
+```
+
 ### Data Structures
 
 #### Source
@@ -141,6 +184,15 @@ interface DomMeta {
   parentIndex: number;
   textOffset: number;
 }
+```
+
+### Overlapping Highlights
+
+When highlights overlap, the `data-highlight-id-extra` attribute stores additional IDs:
+
+```html
+<!-- Highlight A wraps this text, then highlight B also includes it -->
+<span data-highlight-id="A" data-highlight-id-extra="B">overlapping text</span>
 ```
 
 ## License

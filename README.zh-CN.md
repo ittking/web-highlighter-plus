@@ -19,6 +19,7 @@
 - 修复了偏移量计算算法
 - 更好的 TypeScript 类型安全
 - 更灵活的 API 设计
+- 事件驱动的交互监听
 
 ---
 
@@ -31,6 +32,7 @@
 | **F3 类样式控制** | 为指定 ID 的所有 span 包装元素添加/移除 CSS 类 |
 | **F4 批量回显** | 从本地存储或服务端获取数据后批量恢复高亮 |
 | **F5 清除功能** | 清除单个高亮或所有高亮 |
+| **事件监听** | 监听渲染高亮的 hover、hover-out、click 事件 |
 
 ## 技术栈
 
@@ -119,6 +121,47 @@ interface Options {
 | `addClass(id, className)` | `void` | 添加 CSS 类 |
 | `removeClass(id, className)` | `void` | 移除 CSS 类 |
 
+### 事件监听
+
+监听渲染高亮的交互事件：
+
+```typescript
+// 鼠标进入
+hp.on('render:hover', ({ id, doms, event }) => {
+  console.log('hover', id, doms.length);
+  hp.addClass(id, 'active');
+});
+
+// 鼠标离开
+hp.on('render:hover-out', ({ id, doms, event }) => {
+  console.log('hover-out', id);
+  hp.removeClass(id, 'active');
+});
+
+// 点击
+hp.on('render:click', ({ id, doms, event }) => {
+  console.log('click', id);
+  // doms 包含该 ID 下所有的 span 元素（跨标签时多个）
+});
+
+// 移除监听
+hp.off('render:hover', handler);
+```
+
+**事件类型：**
+- `render:hover` - 鼠标进入高亮包装元素
+- `render:hover-out` - 鼠标离开高亮包装元素
+- `render:click` - 点击高亮包装元素
+
+**事件数据：**
+```typescript
+interface RenderEventData {
+  id: string;           // 高亮 ID
+  doms: HTMLElement[]; // 该 ID 下所有的 span 元素
+  event: MouseEvent;    // 原生鼠标事件对象
+}
+```
+
 ### 数据结构
 
 #### Source
@@ -141,6 +184,15 @@ interface DomMeta {
   parentIndex: number;
   textOffset: number;
 }
+```
+
+### 高亮重叠
+
+当高亮重叠时，`data-highlight-id-extra` 属性存储额外的 ID：
+
+```html
+<!-- 高亮 A 包装了这段文字，高亮 B 也包含它 -->
+<span data-highlight-id="A" data-highlight-id-extra="B">重叠的文本</span>
 ```
 
 ## License
