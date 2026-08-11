@@ -1,5 +1,3 @@
 node_modules
 pnpm-workspace.yaml
-dist
-lib
 docs
