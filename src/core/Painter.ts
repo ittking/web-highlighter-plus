@@ -236,13 +236,8 @@ export class Painter {
 
     parent.removeChild($wrapper);
 
-    // Normalize adjacent text nodes
-    if ($wrapper.previousSibling?.nodeType === Node.TEXT_NODE) {
-      normalizeSiblingText($wrapper.previousSibling as Text, true);
-    }
-    if ($wrapper.nextSibling?.nodeType === Node.TEXT_NODE) {
-      normalizeSiblingText($wrapper.nextSibling as Text, false);
-    }
+    // Merge all adjacent text nodes
+    parent.normalize();
   }
 
   /**
