@@ -22,6 +22,7 @@
 // Main class
 export { HighlighterPlus } from './core/Highlighter';
 export type { HighlighterPlus as HighlighterPlusClass } from './core/Highlighter';
+export type { RenderEventType, RenderEventData, RenderEventHandler } from './core/Highlighter';
 
 // Model classes
 export { HighlightSource } from './model/Source';

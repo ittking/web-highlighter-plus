@@ -207,6 +207,11 @@ export class Serializer {
 
     const passedNode = $startNode.nextSibling as Text;
 
+    // Skip if passedNode is empty or whitespace-only
+    if (!passedNode || !passedNode.textContent || passedNode.textContent.trim().length === 0) {
+      return [];
+    }
+
     passedNode.splitText(endOffset - startOffset);
 
     return [
@@ -305,11 +310,15 @@ export class Serializer {
       }
       // Handle text nodes between start and end
       else if (withinSelectedRange && curNode.nodeType === Node.TEXT_NODE) {
-        selectedNodes.push({
-          $node: curNode as Text,
-          type: 'text',
-          splitType: 'none',
-        });
+        const textNode = curNode as Text;
+        // Skip empty or whitespace-only text nodes (e.g., newlines between elements)
+        if (textNode.textContent && textNode.textContent.trim().length > 0) {
+          selectedNodes.push({
+            $node: textNode,
+            type: 'text',
+            splitType: 'none',
+          });
+        }
       }
     }
 

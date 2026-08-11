@@ -814,7 +814,23 @@
       wrapTag: 'span',
       className: 'highlight-wrap',
       exceptSelectors: ['code', 'pre', 'a'],
-      verbose: false
+      verbose: true
+    });
+
+    // 添加事件监听
+    hp.on('render:hover', ({id, doms, event}) => {
+      console.log('hover', id, doms.length);
+      hp.addClass(id, 'active');
+    });
+
+    hp.on('render:hover-out', ({id}) => {
+      console.log('hover-out', id);
+      hp.removeClass(id, 'active');
+    });
+
+    hp.on('render:click', ({id, doms, event}) => {
+      console.log('click', id, doms.length);
+      alert(`点击了高亮: ${id}\n跨标签元素数量: ${doms.length}`);
     });
 
     const sources = {

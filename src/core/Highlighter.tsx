@@ -1,8 +1,56 @@
 import type { Options, Source } from '../types';
-import { DEFAULT_CLASS_NAME, DEFAULT_WRAP_TAG } from '../utils/const';
+import { DEFAULT_CLASS_NAME, DEFAULT_WRAP_TAG, ATTR_IDENTIFIER } from '../utils/const';
 import { Painter } from './Painter';
 import { Serializer } from './Serializer';
 import { HighlightRange } from '../model/Range';
+
+/**
+ * Event types for render interactions
+ */
+export type RenderEventType = 'render:hover' | 'render:hover-out' | 'render:click';
+
+/**
+ * Data passed to render event handlers
+ */
+export interface RenderEventData {
+  id: string;
+  doms: HTMLElement[];
+  event: MouseEvent;
+}
+
+/**
+ * Render event handler type
+ */
+export type RenderEventHandler = (data: RenderEventData) => void;
+
+/**
+ * Simple event emitter for render events
+ */
+class RenderEventEmitter {
+  private handlers: Map<RenderEventType, Set<RenderEventHandler>> = new Map();
+
+  on(event: RenderEventType, handler: RenderEventHandler): void {
+    if (!this.handlers.has(event)) {
+      this.handlers.set(event, new Set());
+    }
+    this.handlers.get(event)!.add(handler);
+  }
+
+  off(event: RenderEventType, handler: RenderEventHandler): void {
+    this.handlers.get(event)?.delete(handler);
+  }
+
+  emit(event: RenderEventType, data: RenderEventData): void {
+    this.handlers.get(event)?.forEach(handler => {
+      try {
+        handler(data);
+      } catch (e) {
+        console.error(`[web-highlighter-plus] Error in ${event} handler:`, e);
+      }
+    });
+  }
+}
+
 
 /**
  * HighlighterPlus - Core class for text highlighting and serialization
@@ -13,6 +61,7 @@ import { HighlightRange } from '../model/Range';
  * - Add/remove CSS classes to highlights
  * - Batch restore from stored data
  * - Remove single or all highlights
+ * - Render event listeners (hover, click)
  */
 export class HighlighterPlus {
   private $root: HTMLElement;
@@ -22,6 +71,8 @@ export class HighlighterPlus {
   private verbose: boolean;
   private painter: Painter;
   private _sources: Map<string, Source> = new Map();
+  private eventEmitter: RenderEventEmitter;
+  private eventHandlersBound: boolean = false;
 
   constructor(options: Options = {}) {
     this.$root = (options.root as HTMLElement) || document.body;
@@ -29,6 +80,7 @@ export class HighlighterPlus {
     this.className = (options.className as string) || DEFAULT_CLASS_NAME;
     this.exceptSelectors = options.exceptSelectors ?? null;
     this.verbose = options.verbose ?? false;
+    this.eventEmitter = new RenderEventEmitter();
 
     this.painter = new Painter(
       this.$root,
@@ -36,6 +88,64 @@ export class HighlighterPlus {
       this.className,
       this.exceptSelectors
     );
+
+    this.bindEventListeners();
+  }
+
+  /**
+   * Bind event listeners to root element
+   */
+  private bindEventListeners(): void {
+    if (this.eventHandlersBound) return;
+    this.eventHandlersBound = true;
+
+    // Mouse enter - highlight wrapper
+    this.$root.addEventListener('mouseenter', (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target.hasAttribute?.(ATTR_IDENTIFIER)) return;
+
+      const id = target.getAttribute(ATTR_IDENTIFIER);
+      if (!id) return;
+
+      const doms = this.getDoms(id);
+      this.eventEmitter.emit('render:hover', {
+        id,
+        doms,
+        event: e,
+      });
+    }, true);
+
+    // Mouse leave - highlight wrapper
+    this.$root.addEventListener('mouseleave', (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target.hasAttribute?.(ATTR_IDENTIFIER)) return;
+
+      const id = target.getAttribute(ATTR_IDENTIFIER);
+      if (!id) return;
+
+      const doms = this.getDoms(id);
+      this.eventEmitter.emit('render:hover-out', {
+        id,
+        doms,
+        event: e,
+      });
+    }, true);
+
+    // Click - highlight wrapper
+    this.$root.addEventListener('click', (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target.hasAttribute?.(ATTR_IDENTIFIER)) return;
+
+      const id = target.getAttribute(ATTR_IDENTIFIER);
+      if (!id) return;
+
+      const doms = this.getDoms(id);
+      this.eventEmitter.emit('render:click', {
+        id,
+        doms,
+        event: e,
+      });
+    }, true);
   }
 
   /**
@@ -202,6 +312,26 @@ export class HighlighterPlus {
    */
   static isHighlightWrapNode($node: Node): boolean {
     return $node instanceof HTMLElement && $node.hasAttribute('data-highlight-id');
+  }
+
+  /**
+   * Add event listener for render interactions
+   * @param event - Event type: 'render:hover', 'render:hover-out', 'render:click'
+   * @param handler - Event handler function
+   */
+  on(event: RenderEventType, handler: RenderEventHandler): void {
+    this.eventEmitter.on(event, handler);
+    this.log(`Added listener for ${event}`);
+  }
+
+  /**
+   * Remove event listener for render interactions
+   * @param event - Event type
+   * @param handler - Event handler to remove
+   */
+  off(event: RenderEventType, handler: RenderEventHandler): void {
+    this.eventEmitter.off(event, handler);
+    this.log(`Removed listener for ${event}`);
   }
 
   /**

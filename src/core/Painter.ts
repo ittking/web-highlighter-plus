@@ -114,6 +114,9 @@ export class Painter {
     const $parent = $text.parentElement;
     if (!$parent) return null;
 
+    // Skip empty or whitespace-only text nodes
+    if (!$text.textContent || $text.textContent.trim().length === 0) return null;
+
     // Check if already wrapped
     if (isHighlightWrapNode($parent)) {
       return this.wrapOverlapNode($parent, $text, splitType, id);
