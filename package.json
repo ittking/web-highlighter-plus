@@ -1,6 +1,6 @@
 {
   "name": "web-highlighter-plus",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A modern TypeScript library for text highlighting and serialization",
   "type": "module",
   "main": "./lib/index.js",
