@@ -85,8 +85,11 @@ hp.render(source);
 // 添加类
 hp.addClass(source.id, 'custom-highlight');
 
-// 从存储恢复
+// 从存储恢复（id 可选，缺失时自动生成）
 hp.restore(storedSources);
+
+// 获取所有 Source
+const allSources = hp.getSources();
 
 // 移除
 hp.remove(source.id);
@@ -112,7 +115,7 @@ interface Options {
 |------|--------|------|
 | `fromRange(range)` | `Source \| null` | 从 Range 对象序列化 |
 | `fromSelection()` | `Source \| null` | 从当前选区序列化 |
-| `fromStore(...)` | `Source \| null` | 从存储数据创建 Source |
+| `fromStore(source)` | `Source \| null` | 从存储数据创建 Source（id 可选） |
 | `render(source)` | `HTMLElement[]` | 渲染 Source 到 DOM |
 | `renderAll(sources)` | `HTMLElement[]` | 批量渲染 |
 | `restore(sources)` | `HTMLElement[]` | 批量回显 |
@@ -120,6 +123,11 @@ interface Options {
 | `removeAll()` | `void` | 移除所有高亮 |
 | `addClass(id, className)` | `void` | 添加 CSS 类 |
 | `removeClass(id, className)` | `void` | 移除 CSS 类 |
+| `getDoms(id?)` | `HTMLElement[]` | 根据 ID 获取包装 DOM |
+| `getSources()` | `Source[]` | 获取所有已存储的 Source |
+| `getSource(id)` | `Source \| undefined` | 根据 ID 获取 Source |
+| `on(event, handler)` | `void` | 添加事件监听 |
+| `off(event, handler)` | `void` | 移除事件监听 |
 
 ### 事件监听
 

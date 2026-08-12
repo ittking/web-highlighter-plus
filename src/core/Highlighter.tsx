@@ -1,27 +1,8 @@
-import type { Options, Source } from '../types';
+import type { Options, Source, RenderEventType, RenderEventData, RenderEventHandler } from '../types';
 import { DEFAULT_CLASS_NAME, DEFAULT_WRAP_TAG, ATTR_IDENTIFIER } from '../utils/const';
 import { Painter } from './Painter';
 import { Serializer } from './Serializer';
 import { HighlightRange } from '../model/Range';
-
-/**
- * Event types for render interactions
- */
-export type RenderEventType = 'render:hover' | 'render:hover-out' | 'render:click';
-
-/**
- * Data passed to render event handlers
- */
-export interface RenderEventData {
-  id: string;
-  doms: HTMLElement[];
-  event: MouseEvent;
-}
-
-/**
- * Render event handler type
- */
-export type RenderEventHandler = (data: RenderEventData) => void;
 
 /**
  * Simple event emitter for render events
@@ -188,16 +169,11 @@ export class HighlighterPlus {
    * Create Source from stored metadata (for restoration)
    * F4: Batch restore - restores highlights from persisted data
    */
-  fromStore(
-    startMeta: Source['startMeta'],
-    endMeta: Source['endMeta'],
-    text: string,
-    id: string,
-    extra?: unknown
-  ): Source | null {
-    const source: Source = { id, text, startMeta, endMeta, extra };
-    this._sources.set(id, source);
-    return source;
+  fromStore(source: Omit<Source, 'id'> & { id?: string }): Source | null {
+    const id = source.id || crypto.randomUUID();
+    const fullSource: Source = { ...source, id };
+    this._sources.set(id, fullSource);
+    return fullSource;
   }
 
   /**
@@ -346,4 +322,4 @@ export class HighlighterPlus {
 
 export { HighlightSource } from '../model/Source';
 export { HighlightRange } from '../model/Range';
-export type { Source, DomMeta, DomNode, Options } from '../types';
+export type { Source, DomMeta, Options } from '../types';

@@ -6,6 +6,7 @@
 
 /**
  * DOM node with offset - represents a position in the DOM tree
+ * Internal type used for range processing
  */
 export interface DomNode {
   $node: Node;
@@ -62,6 +63,7 @@ export interface RangeData {
 
 /**
  * Represents a text node selected for highlighting
+ * Internal type used during rendering
  */
 export interface SelectedNode {
   /** The actual DOM node */
@@ -77,6 +79,28 @@ export interface SelectedNode {
    */
   splitType: 'none' | 'head' | 'tail' | 'both';
 }
+
+/**
+ * Render event data passed to event handlers
+ */
+export interface RenderEventData {
+  /** Highlight ID */
+  id: string;
+  /** DOM elements wrapping the highlight */
+  doms: HTMLElement[];
+  /** Original mouse event */
+  event: MouseEvent;
+}
+
+/**
+ * Render event types
+ */
+export type RenderEventType = 'render:hover' | 'render:hover-out' | 'render:click';
+
+/**
+ * Render event handler function type
+ */
+export type RenderEventHandler = (data: RenderEventData) => void;
 
 // ==================== Configuration ====================
 
@@ -94,17 +118,6 @@ export interface Options {
   exceptSelectors?: string[] | null;
   /** Enable verbose logging */
   verbose?: boolean;
-}
-
-// ==================== Internal Types ====================
-
-/**
- * Wrapper element data stored in cache
- */
-export interface WrapperData {
-  id: string;
-  extraIds: string[];
-  className: string;
 }
 
 // ==================== Constants ====================

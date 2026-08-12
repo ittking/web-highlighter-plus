@@ -1,6 +1,6 @@
 {
   "name": "web-highlighter-plus",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "A modern TypeScript library for text highlighting and serialization",
   "type": "module",
   "main": "./lib/index.js",
@@ -34,6 +34,7 @@
   "homepage": "https://github.com/ittking/web-highlighter-plus",
   "devDependencies": {
     "typescript": "^5.4.0",
-    "vite": "^5.4.0"
+    "vite": "^5.4.0",
+    "vite-plugin-dts": "^5.0.3"
   }
 }

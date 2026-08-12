@@ -85,8 +85,11 @@ hp.render(source);
 // Add class
 hp.addClass(source.id, 'custom-highlight');
 
-// Restore from storage
+// Restore from storage (id is optional, auto-generated if missing)
 hp.restore(storedSources);
+
+// Get all sources
+const allSources = hp.getSources();
 
 // Remove
 hp.remove(source.id);
@@ -112,7 +115,7 @@ interface Options {
 |--------|--------|-------------|
 | `fromRange(range)` | `Source \| null` | Serialize from Range object |
 | `fromSelection()` | `Source \| null` | Serialize from current selection |
-| `fromStore(...)` | `Source \| null` | Create Source from stored data |
+| `fromStore(source)` | `Source \| null` | Create Source from stored data (id is optional) |
 | `render(source)` | `HTMLElement[]` | Render Source to DOM |
 | `renderAll(sources)` | `HTMLElement[]` | Batch render |
 | `restore(sources)` | `HTMLElement[]` | Batch restore |
@@ -120,6 +123,11 @@ interface Options {
 | `removeAll()` | `void` | Remove all highlights |
 | `addClass(id, className)` | `void` | Add CSS class |
 | `removeClass(id, className)` | `void` | Remove CSS class |
+| `getDoms(id?)` | `HTMLElement[]` | Get wrapper DOMs by ID |
+| `getSources()` | `Source[]` | Get all stored sources |
+| `getSource(id)` | `Source \| undefined` | Get source by ID |
+| `on(event, handler)` | `void` | Add event listener |
+| `off(event, handler)` | `void` | Remove event listener |
 
 ### Event Listeners
 
